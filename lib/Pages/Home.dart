@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 import 'package:flutter9ids1/Pages/Products/Products.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +15,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewProduct()),
+          );
+        },
       ),
       drawer: Drawer(
         child: ListView(

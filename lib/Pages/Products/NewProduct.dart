@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/Pages/Home.dart';
@@ -8,6 +9,8 @@ import 'package:quickalert/quickalert.dart';
 
 class NewProduct extends StatefulWidget {
   const NewProduct({super.key});
+
+
 
   @override
   State<NewProduct> createState() => _NewProductState();
@@ -20,7 +23,7 @@ class _NewProductState extends State<NewProduct> {
 
   Future<void> fnAgregarProducto() async {
     var response = await http.post(
-        Uri.parse('http://192.168.43.158:8000/api/productos/nuevo'),
+        Uri.parse('http://192.168.100.20:8000/api/productos/nuevo'),
         body: jsonEncode(<String, String>{
           'codigo': txtCodigoController.text,
           'descripcion': txtDescripcionController.text,
@@ -51,9 +54,11 @@ class _NewProductState extends State<NewProduct> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Agregar Producto"),
+        backgroundColor: Colors.pink,
       ),
       body: Column(
         children: [
+          Text("Inserta los datos del producto por favor"),
           TextField(
             controller: txtCodigoController,
             decoration: const InputDecoration(
@@ -63,7 +68,9 @@ class _NewProductState extends State<NewProduct> {
             controller: txtDescripcionController,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(), hintText: 'Descripción'),
+                
           ),
+
           TextField(
             controller: txtPrecioController,
             decoration: const InputDecoration(
@@ -79,7 +86,7 @@ class _NewProductState extends State<NewProduct> {
 
             },
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.pink),
             ),
             child: const Text('Agregar'),
           )
