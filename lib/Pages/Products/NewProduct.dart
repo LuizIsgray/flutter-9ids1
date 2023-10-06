@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/Pages/Home.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/Models/ModelNewProduct.dart';
 import 'package:quickalert/quickalert.dart';
@@ -19,7 +20,7 @@ class _NewProductState extends State<NewProduct> {
 
   Future<void> fnAgregarProducto() async {
     var response = await http.post(
-        Uri.parse('http://192.168.8.5:8000/api/productos/nuevo'),
+        Uri.parse('http://192.168.43.158:8000/api/productos/nuevo'),
         body: jsonEncode(<String, String>{
           'codigo': txtCodigoController.text,
           'descripcion': txtDescripcionController.text,
@@ -28,40 +29,28 @@ class _NewProductState extends State<NewProduct> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
-/*
-    Map<String, dynamic> jsonResp = jsonDecode(response.body);
-    var objResp = ModelNewProduct.fromJson(jsonResp);
+
+    var respuesta = response.body;
     //Implementar quickalert
 
-    if (objResp.exito == "OK") {
+    if (respuesta == "OK") {
       //Mensaje ok depende de laravel
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: 'Producto agregado!',
-
-        /*
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-        */
-      );
+      Navigator.pop(context);
     } else {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
         title: 'Oops...',
-        text: objResp.error,
+        text: "No se pudo agregar el producto",
       );
     }
-*/
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Productos"),
+        title: Text("Agregar Producto"),
       ),
       body: Column(
         children: [
@@ -83,6 +72,11 @@ class _NewProductState extends State<NewProduct> {
           TextButton(
             onPressed: () {
               fnAgregarProducto();
+              /*
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
+                  */
+
             },
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),

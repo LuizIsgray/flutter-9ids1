@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
 
   Future<void> fnLogin() async {
     var response = await http.post(
-        Uri.parse('http://192.168.8.5:8000/api/login'),
+        Uri.parse('http://192.168.43.158:8000/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,
@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login =D"),
+        title: Text("Bienvenido =D"),
       ),
       body: Column(
         children: [

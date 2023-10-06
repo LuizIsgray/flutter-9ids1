@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/Pages/Products/Products.dart';
+import 'package:flutter9ids1/Pages/Home.dart';
+import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Products extends StatefulWidget {
+  const Products({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Products> createState() => _ProductsState();
 }
 
-class _HomeState extends State<Home> {
+class _ProductsState extends State<Products> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("Productos"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewProduct()),
+          );
+        },
       ),
       drawer: Drawer(
         child: ListView(
