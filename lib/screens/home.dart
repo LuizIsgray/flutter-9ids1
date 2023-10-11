@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/Pages/Products/Products.dart';
+import 'package:flutter9ids1/screens/Products/productsScreen.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class home extends StatefulWidget {
+  const home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<home> createState() => _homeState();
 }
 
-class _HomeState extends State<Home> {
+class _homeState extends State<home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(color: Colors.blue),
                 child: Column(
                   children: [
-                    Expanded(child: Image.network('')),
+                    Expanded(child: Image.network("https://drive.google.com/file/d/1EkjCn5unLp52tO58XWtDf6fuGN4xXiuq/view?usp=sharing")),
                     Text("Usuario")
                   ],
                 )),
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()),
+                  MaterialPageRoute(builder: (context) => home()),
                 );
               },
             ),
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Products()),
+                  MaterialPageRoute(builder: (context) => productsScreen()),
                 );
               },
             ),
