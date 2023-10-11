@@ -1,16 +1,33 @@
 # 9IDS1
 
-A new Flutter project.
+Aplicación para dispositivos móviles utilizando Flutter, con API REST en Laravel.
 
-## Getting Started
+## Descripción de los directorios
 
-This project is a starting point for a Flutter application.
+### lib/
+Aquí es donde se encuentra la mayoría del código fuente de la aplicación Flutter. 
+El archivo main.dart es el punto de entrada de la aplicación.
 
-A few resources to get you started if this is your first Flutter project:
+### lib/screens/
+Este directorio contiene archivos para cada pantalla de la aplicación.
+~~Cada pantalla puede estar en su propio archivo.~~
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### lib/widgets/
+Aquí se encuentran los widgets reutilizables que se utilizan en varias partes de la aplicación.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### lib/models/
+Este directorio contiene clases que representan modelos de datos utilizados en la aplicación.
+
+### lib/services/
+Este directorio contiene la lógica de negocio y servicios.
+En este proyecto se utilizó [Laravel](https://github.com/LuizIsgray/api-rest-laravel-9ids1)
+
+### test/
+Aquí se encuentran las pruebas unitarias y de integración.
+
+### assets/
+Archivos estáticos como imágenes, fuentes y otros recursos.
+
+### pubspec.yaml y pubspec.lock
+El archivo pubspec.yaml es donde se especifican las dependencias del proyecto, metadatos y configuraciones. 
+El archivo pubspec.lock se genera automáticamente y bloquea las versiones de las dependencias utilizadas en el proyecto.
