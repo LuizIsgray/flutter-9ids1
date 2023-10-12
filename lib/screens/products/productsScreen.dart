@@ -3,26 +3,28 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/screens/home.dart';
 import 'package:flutter9ids1/screens/products/crudProductScreen.dart';
+import 'package:flutter9ids1/services/productsService.dart';
+import 'package:flutter9ids1/widgets/snackbarUtil.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 
-class productsScreen extends StatefulWidget {
-  const productsScreen({super.key});
+class ProductsScreen extends StatefulWidget {
+  const ProductsScreen({super.key});
 
   @override
-  State<productsScreen> createState() => _productsScreenState();
+  State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _productsScreenState extends State<productsScreen> {
-  final ip = "192.168.8.4";
+class _ProductsScreenState extends State<ProductsScreen> {
 
-  bool estaCargando = true;
+  bool datosCargados = false;
   List productos = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    listarProductos();
+    fnListarProductos();
   }
 
   @override
@@ -34,7 +36,7 @@ class _productsScreenState extends State<productsScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.blue,
-        onPressed: navegarPaginaNuevoProducto,
+        onPressed: fnNavegarPaginaNuevoProducto,
       ),
       drawer: Drawer(
         child: ListView(
@@ -55,7 +57,7 @@ class _productsScreenState extends State<productsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => home()),
+                  MaterialPageRoute(builder: (context) => Home()),
                 );
               },
             ),
@@ -65,7 +67,7 @@ class _productsScreenState extends State<productsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => productsScreen()),
+                  MaterialPageRoute(builder: (context) => ProductsScreen()),
                 );
               },
             ),
@@ -84,103 +86,111 @@ class _productsScreenState extends State<productsScreen> {
       ),
       body: Visibility(
         visible:
-            !estaCargando, //Lo contrario, si visible = true no muestra, visible = false muestra
+            datosCargados, //Por defecto false, cuando se cargan true y muestra
         replacement: Center(child: CircularProgressIndicator()),
         child: RefreshIndicator(
-          onRefresh: listarProductos,
-          child: ListView.builder(
-            itemCount: productos.length,
-            itemBuilder: (context, index) {
-              final producto = productos[index]
-                  as Map; //Map es para usar todos los datos en productos
-              final id = producto["id"]
-                  as int; //Se obtiene el valor "id" del producto seleccionado
-              return ListTile(
-                leading: CircleAvatar(
-                    backgroundColor: Colors.white, child: Text("${index + 1}")),
-                title: Text(producto["codigo"]),
-                subtitle: Row(
-                  children: [
-                    Text(producto["descripcion"]),
-                    SizedBox(width: 20),
-                    Text(producto["precio"]),
-                  ],
-                ),
-                trailing: PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == "edit") {
-                      navegarPaginaEditarProducto(producto);
-                    } else if (value == "delete") {
-                      borrarProducto(id);
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(child: Text("Editar"), value: "edit"),
-                      PopupMenuItem(child: Text("Eliminar"), value: "delete"),
-                    ];
-                  },
-                ),
-              );
-            },
+          onRefresh: fnListarProductos,
+          child: Visibility(
+            visible: productos
+                .isNotEmpty, //Cuando existen elementos = true y muestra los elementos
+            replacement: Center(
+              child: Text("No hay elementos registrados"),
+            ),
+            child: ListView.builder(
+              itemCount: productos.length,
+              padding: EdgeInsets.all(12),
+              itemBuilder: (context, index) {
+                final producto = productos[index]
+                    as Map; //Map es para usar todos los datos en productos
+                final id = producto["id"]
+                    as int; //Se obtiene el valor "id" del producto seleccionado
+                return Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Text("${index + 1}")),
+                    title: Text(producto["codigo"]),
+                    subtitle: Row(
+                      children: [
+                        Text(producto["descripcion"]),
+                        SizedBox(width: 20),
+                        Text(producto["precio"]),
+                      ],
+                    ),
+                    trailing: PopupMenuButton(
+                      onSelected: (value) {
+                        if (value == "edit") {
+                          fnNavegarPaginaEditarProducto(producto);
+                        } else if (value == "delete") {
+                          fnEliminarProducto(id);
+                        }
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(child: Text("Editar"), value: "edit"),
+                          PopupMenuItem(
+                              child: Text("Eliminar"), value: "delete"),
+                        ];
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> navegarPaginaNuevoProducto() async {
-    final route = MaterialPageRoute(builder: (context) => crudProductScreen());
+  Future<void> fnNavegarPaginaNuevoProducto() async {
+    final route = MaterialPageRoute(builder: (context) => CrudProductScreen());
     await Navigator.push(context, route);
     setState(() {
-      estaCargando = false;
+      datosCargados = true;
     });
-    listarProductos();
+    fnListarProductos();
   }
 
-  Future<void> navegarPaginaEditarProducto(Map producto) async{
-    final route = MaterialPageRoute(builder: (context) => crudProductScreen(todo: producto)); //Se manda el producto seleccionado a la pagina
+  Future<void> fnNavegarPaginaEditarProducto(Map producto) async {
+    final route = MaterialPageRoute(
+        builder: (context) => CrudProductScreen(
+            todo: producto)); //Se manda el producto seleccionado a la pagina
     await Navigator.push(context, route);
     setState(() {
-      estaCargando = true;
+      datosCargados = true;
     });
-    listarProductos();
+    fnListarProductos();
   }
 
-  Future<void> borrarProducto(int id) async {
-    //Borrar elemento
-    final url = "http://$ip:8000/api/productos/$id";
-    final uri = Uri.parse(url);
-    final response = await http.delete(uri);
-    if (response.statusCode == 200) {
+  Future<void> fnEliminarProducto(int id) async {
+    //Borrar elemento usando servicio
+    final isSuccess = await ProductsService.borrarProducto(id);
+    if (isSuccess) {
       //Remover elemento de la lista
       final filtrado =
           productos.where((element) => element["id"] != id).toList();
       setState(() {
         productos = filtrado;
       });
+      mostrarMensajeExito(context, "Eliminado con éxito");
     } else {
-      print("Error al borrar el elemento");
-      print(response.body);
+      mostrarMensajeError(context, "Error al eliminar el elemento");
     }
   }
 
-  Future<void> listarProductos() async {
-    final url = "http://$ip:8000/api/productos";
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
+  Future<void> fnListarProductos() async {
+    final respuesta = await ProductsService.listarProductos();
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      //En caso de encontrarse dentro de otro lista seria:  final resultado = json["nombre de la sub lista"] as List;
-      final resultado = json as List;
+    if (respuesta != null) {
       setState(() {
-        productos = resultado;
+        productos = respuesta;
       });
+    } else {
+      mostrarMensajeError(context, "Error al consultar los elementos");
     }
     setState(() {
-      estaCargando = false;
+      datosCargados = true;
     });
-    print(response.statusCode);
   }
 }

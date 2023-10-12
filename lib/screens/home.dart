@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/Products/productsScreen.dart';
+import 'package:flutter9ids1/screens/products/productsScreen.dart';
 
-class home extends StatefulWidget {
-  const home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<home> createState() => _homeState();
+  State<Home> createState() => _HomeState();
 }
 
-class _homeState extends State<home> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _homeState extends State<home> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => home()),
+                  MaterialPageRoute(builder: (context) => Home()),
                 );
               },
             ),
@@ -42,7 +42,7 @@ class _homeState extends State<home> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => productsScreen()),
+                  MaterialPageRoute(builder: (context) => ProductsScreen()),
                 );
               },
             ),

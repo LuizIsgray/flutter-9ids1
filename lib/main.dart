@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Akiba Shop',
       theme: ThemeData.dark(),
-      home: const login(),
+      home: const Login(),
     );
   }
 }

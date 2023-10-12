@@ -6,22 +6,21 @@ import 'package:flutter9ids1/models/ModelLogin.dart';
 import 'package:flutter9ids1/screens/home.dart';
 import 'package:quickalert/quickalert.dart';
 
-class login extends StatefulWidget {
-  const login({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  State<login> createState() => _loginState();
+  State<Login> createState() => _LoginState();
 }
 
-class _loginState extends State<login> {
+class _LoginState extends State<Login> {
   final ip = "192.168.8.4";
 
-  final txtUserController = TextEditingController();
-  final txtPasswordController = TextEditingController();
+  TextEditingController txtUserController = TextEditingController();
+  TextEditingController txtPasswordController = TextEditingController();
 
   Future<void> fnLogin() async {
-    var response = await http.post(
-        Uri.parse('http://$ip:8000/api/login'),
+    var response = await http.post(Uri.parse('http://$ip:8000/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,
@@ -43,7 +42,7 @@ class _loginState extends State<login> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => home()),
+        MaterialPageRoute(builder: (context) => const Home()),
       );
     } else {
       QuickAlert.show(
@@ -59,9 +58,10 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bienvenido =D"),
+        title: const Text("Bienvenido =D"),
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(20),
         children: [
           TextField(
             controller: txtUserController,
@@ -69,6 +69,7 @@ class _loginState extends State<login> {
             decoration: const InputDecoration(
                 border: OutlineInputBorder(), hintText: 'Usuario'),
           ),
+          const SizedBox(height: 20),
           TextField(
             controller: txtPasswordController,
             obscureText: true,
@@ -76,14 +77,19 @@ class _loginState extends State<login> {
             decoration: const InputDecoration(
                 border: OutlineInputBorder(), hintText: 'Contraseña'),
           ),
-          TextButton(
+          const SizedBox(height: 20),
+          ElevatedButton(
             onPressed: () {
               fnLogin();
             },
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
             ),
-            child: const Text('Accesar'),
+            child: const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text("Accesar",
+                  style: TextStyle(color: Colors.white, fontSize: 20)),
+            ),
           )
         ],
       ),

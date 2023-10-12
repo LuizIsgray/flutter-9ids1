@@ -1,19 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/services/productsService.dart';
+import 'package:flutter9ids1/widgets/snackbarUtil.dart';
 import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 
-class crudProductScreen extends StatefulWidget {
+class CrudProductScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
-  const crudProductScreen({super.key, this.todo});
+  const CrudProductScreen({super.key, this.todo});
 
   @override
-  State<crudProductScreen> createState() => _crudProductScreenState();
+  State<CrudProductScreen> createState() => _CrudProductScreenState();
 }
 
-class _crudProductScreenState extends State<crudProductScreen> {
-  final ip = "192.168.8.4";
+class _CrudProductScreenState extends State<CrudProductScreen> {
 
   TextEditingController txtCodigoController = TextEditingController();
   TextEditingController txtDescripcionController = TextEditingController();
@@ -67,7 +68,7 @@ class _crudProductScreenState extends State<crudProductScreen> {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: esEdicion ? fnEditarProducto : fnAgregarProducto,
+            onPressed: esEdicion ? fnActualizarProducto : fnAgregarProducto,
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
             ),
@@ -94,31 +95,19 @@ class _crudProductScreenState extends State<crudProductScreen> {
     };
 
     //Enviar información al servidor
-    final url = "http://$ip:8000/api/productos";
-    final uri = Uri.parse(url);
-    final response = await http.post(uri,
-        body: jsonEncode(body),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        });
+    final isSuccess = await ProductsService.agregarProducto(body);
 
     //Mostrar respuesta segun el estado devuelto
-    if (response.statusCode == 200) {
+    if (isSuccess) {
       txtCodigoController.text = "";
       txtDescripcionController.text = "";
       txtPrecioController.text = "";
 
-      mostrarMensajeExito("Agregado con éxito");
+      mostrarMensajeExito(context, "Agregado con éxito");
 
       Navigator.pop(context);
     } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Oops...',
-        text: "No se pudo agregar el elemento.\n\nCódigo de error: " +
-            response.statusCode.toString(),
-      );
+      mostrarMensajeError(context, "Error al agregar el elemento");
     }
     //print(response.statusCode);
     //print(response.body);
@@ -149,7 +138,7 @@ class _crudProductScreenState extends State<crudProductScreen> {
      */
   }
 
-  Future<void> fnEditarProducto() async {
+  Future<void> fnActualizarProducto() async {
     //Obtener datos del formulario
     final todo = widget.todo;
     if (todo == null) {
@@ -167,31 +156,14 @@ class _crudProductScreenState extends State<crudProductScreen> {
     };
 
     //Enviar información ACTUALIZADA al servidor
-    final url = "http://$ip:8000/api/productos/$id";
-    final uri = Uri.parse(url);
-    final response = await http.put(uri,
-        body: jsonEncode(body),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        });
+    final isSuccess = await ProductsService.actualizarProducto(id, body);
 
     //Mostrar respuesta segun el estado devuelto
-    if (response.statusCode == 200) {
-      mostrarMensajeExito("Actualizado con éxito");
+    if (isSuccess) {
+      mostrarMensajeExito(context, "Actualizado con éxito");
       Navigator.pop(context);
     } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Oops...',
-        text: "No se pudo actualizar el elemento.\n\nCódigo de error: " +
-            response.statusCode.toString(),
-      );
+      mostrarMensajeError(context, "Error al actualizar el elemento");
     }
-  }
-
-  void mostrarMensajeExito(String mensaje) {
-    final snackBar = SnackBar(content: Text(mensaje));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
