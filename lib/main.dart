@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/login.dart';
+import 'package:flutter9ids1/screens/loginScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Akiba Shop',
       theme: ThemeData.dark(),
-      home: const Login(),
+      home: const LoginScreen(),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/services/productsService.dart';
-import 'package:flutter9ids1/widgets/snackbarUtil.dart';
+import 'package:flutter9ids1/utils/snackbarUtil.dart';
 import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 
