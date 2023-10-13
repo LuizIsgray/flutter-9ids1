@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/Pages/Home.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter9ids1/Models/ModelNewProduct.dart';
+import 'package:flutter9ids1/Models/ModelProductos.dart';
 import 'package:quickalert/quickalert.dart';
 
 class NewProduct extends StatefulWidget {
@@ -23,7 +23,7 @@ class _NewProductState extends State<NewProduct> {
 
   Future<void> fnAgregarProducto() async {
     var response = await http.post(
-        Uri.parse('http://192.168.100.20:8000/api/productos/nuevo'),
+        Uri.parse('http://172.20.10.3:8000/api/productos'),
         body: jsonEncode(<String, String>{
           'codigo': txtCodigoController.text,
           'descripcion': txtDescripcionController.text,

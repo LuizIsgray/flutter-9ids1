@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
 
   Future<void> fnLogin() async {
     var response = await http.post(
-        Uri.parse('http://192.168.100.20:8000/api/login'),
+        Uri.parse('http://172.20.10.3:8000/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,
