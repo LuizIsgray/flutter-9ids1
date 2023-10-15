@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
-import 'package:flutter9ids1/screens/homeScreen.dart';
 import 'package:quickalert/quickalert.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -57,6 +56,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text("Accesar",
                     style: TextStyle(color: Colors.white, fontSize: 20)),
               ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "home");
+              },
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text("Accesar TEST",
+                    style: TextStyle(color: Colors.white, fontSize: 20)),
+              ),
             )
           ],
         ),
@@ -85,10 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
         text: 'Usuario existe!',
       */
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.pushReplacementNamed(context, "home");
+
     } else {
       QuickAlert.show(
         context: context,

@@ -24,20 +24,14 @@ class DrawerWidget extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text("Home"),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
+              Navigator.pushReplacementNamed(context, "home");
             },
           ),
           ListTile(
             leading: Icon(Icons.shopping_bag),
             title: Text("Productos"),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProductsScreen()),
-              );
+              Navigator.pushReplacementNamed(context, "products");
             },
           ),
           ListTile(
@@ -55,10 +49,7 @@ class DrawerWidget extends StatelessWidget {
             leading: Icon(Icons.settings),
             title: Text("Configuración"),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ConfigurationScreen()),
-              );
+              Navigator.pushNamed(context, "configuration");
             },
           ),
         ],

@@ -100,8 +100,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> fnNavegarPaginaNuevoProducto() async {
-    final route = MaterialPageRoute(builder: (context) => CrudProductScreen());
-    await Navigator.push(context, route);
+    await Navigator.pushNamed(context, "products/crud");
     setState(() {
       datosCargados = true;
     });
