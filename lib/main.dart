@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     "home": (context) => const HomeScreen(),
     "configuration": (context) => const ConfigurationScreen(),
     "products": (context) => const ProductsScreen(),
+    "products/nuevo": (context) => const CrudProductScreen(),
   };
 
   // This widget is the root of your application.
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark(useMaterial3: true),
       title: 'Akiba Shop',
       initialRoute: "login",
       routes: rutas,

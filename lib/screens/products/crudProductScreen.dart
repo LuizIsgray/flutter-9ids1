@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/services/productsService.dart';
 import 'package:flutter9ids1/utils/snackbarUtil.dart';
-import 'package:http/http.dart' as http;
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CrudProductScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
@@ -19,11 +17,15 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
   TextEditingController txtPrecioController = TextEditingController();
 
   //Mask para formatear la entrada del CODIGO
+  //Comentada porque borra lo guardado en el campo al editar
+  /*
   var codeMask = MaskTextInputFormatter(
       mask: 'AAA###',
       filter: { "#": RegExp(r'[0-9]'), "A": RegExp('[A-Z, a-z]') },
-      type: MaskAutoCompletionType.lazy
+
+      //type: MaskAutoCompletionType.lazy
   );
+   */
 
   bool esEdicion = false;
 
@@ -48,10 +50,11 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
             : "Agregar Producto"), //esEdicion = true se coloca Editar
       ),
       body: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: [
           TextField(
-            inputFormatters: [codeMask],
+            //inputFormatters: [codeMask],
+            autocorrect: false,
             controller: txtCodigoController,
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Código'),
@@ -65,23 +68,23 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Descripción'),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
             controller: txtPrecioController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Precio'),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: esEdicion ? fnActualizarProducto : fnAgregarProducto,
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(192, 8, 18, 1)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(esEdicion ? "Actualizar" : "Agregar",
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
+                  style: const TextStyle(color: Colors.white, fontSize: 20)),
             ),
           )
         ],
@@ -148,7 +151,7 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
     //Obtener datos del formulario
     final todo = widget.todo;
     if (todo == null) {
-      print("No puedes editar");
+      mostrarMensajeError(context, "No puedes realizar está acción");
       return;
     }
     final id = todo["id"];

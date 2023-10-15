@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/homeScreen.dart';
 import 'package:flutter9ids1/screens/products/crudProductScreen.dart';
 import 'package:flutter9ids1/services/productsService.dart';
 import 'package:flutter9ids1/widgets/drawerWidget.dart';
 import 'package:flutter9ids1/utils/snackbarUtil.dart';
-import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -33,28 +29,28 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Scaffold(
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: Text("Productos"),
+        title: const Text("Productos"),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add, color: Colors.white),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
         onPressed: fnNavegarPaginaNuevoProducto,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Visibility(
         visible:
             datosCargados, //Por defecto false, cuando se cargan true y muestra
-        replacement: Center(child: CircularProgressIndicator()),
+        replacement: const Center(child: CircularProgressIndicator()),
         child: RefreshIndicator(
           onRefresh: fnListarProductos,
           child: Visibility(
             visible: productos
                 .isNotEmpty, //Cuando existen elementos = true y muestra los elementos
-            replacement: Center(
+            replacement: const Center(
               child: Text("No hay elementos registrados"),
             ),
             child: ListView.builder(
               itemCount: productos.length,
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               itemBuilder: (context, index) {
                 final producto = productos[index]
                     as Map; //Map es para usar todos los datos en productos
@@ -64,12 +60,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   child: ListTile(
                     leading: CircleAvatar(
                         backgroundColor: Colors.white,
-                        child: Text("${index + 1}")),
+                        child: Text("${index + 1}", style: const TextStyle(color: Colors.black),)),
                     title: Text(producto["codigo"]),
                     subtitle: Row(
                       children: [
                         Text(producto["descripcion"]),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         Text(producto["precio"]),
                       ],
                     ),
@@ -78,14 +74,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         if (value == "edit") {
                           fnNavegarPaginaEditarProducto(producto);
                         } else if (value == "delete") {
-                          fnEliminarProducto(id);
+                          QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.confirm,
+                              title: "Eliminar elemento",
+                              text: "Esta acción es irreversible",
+                              confirmBtnText: "Eliminar",
+                              confirmBtnColor: Colors.red,
+                              onConfirmBtnTap: () {
+                                  fnEliminarProducto(id);
+                                  Navigator.pop(context);
+                              }
+                          );
                         }
                       },
                       itemBuilder: (context) {
                         return [
-                          PopupMenuItem(child: Text("Editar"), value: "edit"),
-                          PopupMenuItem(
-                              child: Text("Eliminar"), value: "delete"),
+                          const PopupMenuItem(value: "edit", child: Text("Editar")),
+                          const PopupMenuItem(
+                              value: "delete",
+                              child: Text("Eliminar")),
                         ];
                       },
                     ),
@@ -100,7 +108,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> fnNavegarPaginaNuevoProducto() async {
-    await Navigator.pushNamed(context, "products/crud");
+    await Navigator.pushNamed(context, "products/nuevo");
     setState(() {
       datosCargados = true;
     });

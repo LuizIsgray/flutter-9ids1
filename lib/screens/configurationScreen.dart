@@ -12,8 +12,8 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Color.fromRGBO(192, 8, 18, 1),
-          title: Text("Configuración")),
+          backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
+          title: const Text("Configuración")),
     );
   }
 }

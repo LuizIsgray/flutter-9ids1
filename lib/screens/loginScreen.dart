@@ -22,55 +22,69 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(192, 8, 18, 1),
+        backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
         title: const Text("Akiba Shop"),
       ),
       body: Center(
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            TextField(
-              controller: txtUserController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: 'Usuario'),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: txtPasswordController,
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: 'Contraseña'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                fnLogin();
-              },
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: txtUserController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.account_circle),
+                    border: OutlineInputBorder(),
+                    labelText: "Usuario",
+                    hintText: 'Usuario'),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text("Accesar",
+              const SizedBox(height: 20),
+              TextField(
+                controller: txtPasswordController,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(),
+                    labelText: "Contraseña",
+                    hintText: 'Contraseña'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () {
+                  fnLogin();
+                },
+                label: const Text("ACCESAR",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                icon: const Icon(
+                  Icons.login,
+                  color: Colors.white,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, "home");
+                },
+                label: const Text("TEST",
                     style: TextStyle(color: Colors.white, fontSize: 20)),
+                icon: const Icon(
+                  Icons.login,
+                  color: Colors.white,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, "home");
-              },
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text("Accesar TEST",
-                    style: TextStyle(color: Colors.white, fontSize: 20)),
-              ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -98,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
       */
 
       Navigator.pushReplacementNamed(context, "home");
-
     } else {
       QuickAlert.show(
         context: context,
@@ -108,4 +121,5 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
+
 }

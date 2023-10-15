@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/configurationScreen.dart';
-import 'package:flutter9ids1/screens/homeScreen.dart';
-import 'package:flutter9ids1/screens/loginScreen.dart';
-import 'package:flutter9ids1/screens/products/productsScreen.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -13,43 +9,51 @@ class DrawerWidget extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.white),
               child: Column(
                 children: [
                   Expanded(child: Image.network("https://i.imgur.com/nMDaD07.jpg")),
-                  Text("Usuario", style: TextStyle(color: Colors.black),)
+                  const Text("Usuario", style: TextStyle(color: Colors.black),)
                 ],
               )),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home"),
+            leading: const Icon(Icons.home),
+            title: const Text("Home"),
             onTap: () {
               Navigator.pushReplacementNamed(context, "home");
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_bag),
-            title: Text("Productos"),
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text("Productos"),
             onTap: () {
               Navigator.pushReplacementNamed(context, "products");
             },
           ),
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text("Clientes"),
+            leading: const Icon(Icons.person),
+            title: const Text("Clientes"),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.sell),
-            title: Text("Ventas"),
+            leading: const Icon(Icons.sell),
+            title: const Text("Ventas"),
             onTap: () {},
           ),
-          Divider(color: Colors.white),
+          const Divider(color: Colors.white),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text("Configuración"),
+            leading: const Icon(Icons.settings),
+            title: const Text("Configuración"),
             onTap: () {
               Navigator.pushNamed(context, "configuration");
+            },
+          ),
+          const Divider(color: Colors.white),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text("Cerrar sesión"),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, "login");
             },
           ),
         ],

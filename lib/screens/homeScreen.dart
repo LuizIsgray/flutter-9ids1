@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/products/productsScreen.dart';
 import 'package:flutter9ids1/widgets/drawerWidget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,8 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(192, 8, 18, 1),
-        title: Text("Home"),
+        backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
+        title: const Text("Home"),
       ),
     );
   }

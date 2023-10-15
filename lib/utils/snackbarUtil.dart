@@ -7,7 +7,7 @@ void mostrarMensajeExito(BuildContext context, String mensaje) {
 }
 
 void mostrarMensajeError(BuildContext context, String mensaje) {
-  final snackBar = SnackBar(content: Text(mensaje, style: TextStyle(color: Colors.white)),
+  final snackBar = SnackBar(content: Text(mensaje, style: const TextStyle(color: Colors.white)),
       backgroundColor: Colors.red);
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
