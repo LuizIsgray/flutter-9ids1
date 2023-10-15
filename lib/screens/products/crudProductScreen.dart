@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/services/productsService.dart';
 import 'package:flutter9ids1/utils/snackbarUtil.dart';
 import 'package:http/http.dart' as http;
-import 'package:quickalert/quickalert.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CrudProductScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
@@ -19,6 +17,13 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
   TextEditingController txtCodigoController = TextEditingController();
   TextEditingController txtDescripcionController = TextEditingController();
   TextEditingController txtPrecioController = TextEditingController();
+
+  //Mask para formatear la entrada del CODIGO
+  var codeMask = MaskTextInputFormatter(
+      mask: 'AAA###',
+      filter: { "#": RegExp(r'[0-9]'), "A": RegExp('[A-Z, a-z]') },
+      type: MaskAutoCompletionType.lazy
+  );
 
   bool esEdicion = false;
 
@@ -46,11 +51,12 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
         padding: EdgeInsets.all(20),
         children: [
           TextField(
+            inputFormatters: [codeMask],
             controller: txtCodigoController,
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Código'),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
             controller: txtDescripcionController,
             keyboardType: TextInputType.multiline,
@@ -62,7 +68,7 @@ class _CrudProductScreenState extends State<CrudProductScreen> {
           SizedBox(height: 20),
           TextField(
             controller: txtPrecioController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Precio'),
           ),

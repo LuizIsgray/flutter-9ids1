@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color.fromRGBO(192, 8, 18, 1),
         title: const Text("Akiba Shop"),
       ),
       body: Center(

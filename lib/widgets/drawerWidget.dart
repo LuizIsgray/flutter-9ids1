@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/screens/configurationScreen.dart';
 import 'package:flutter9ids1/screens/homeScreen.dart';
 import 'package:flutter9ids1/screens/loginScreen.dart';
 import 'package:flutter9ids1/screens/products/productsScreen.dart';
@@ -56,7 +57,7 @@ class DrawerWidget extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const ConfigurationScreen()),
               );
             },
           ),
