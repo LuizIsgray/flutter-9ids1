@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/index.dart';
+import 'package:flutter9ids1/utils/screensIndexUtil.dart';
 
 
 void main() {
