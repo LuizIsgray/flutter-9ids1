@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final ip = "172.20.10.3";
+  final ip = "192.168.8.4";
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();

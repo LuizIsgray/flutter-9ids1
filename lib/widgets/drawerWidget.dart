@@ -14,7 +14,7 @@ class DrawerWidget extends StatelessWidget {
               decoration: BoxDecoration(color: Colors.blue),
               child: Column(
                 children: [
-                  Expanded(child: Image.network("https://drive.google.com/file/d/1EkjCn5unLp52tO58XWtDf6fuGN4xXiuq/view?usp=sharing")),
+                  Expanded(child: Image.network("https://i.imgur.com/nMDaD07.jpg")),
                   Text("Usuario")
                 ],
               )),
