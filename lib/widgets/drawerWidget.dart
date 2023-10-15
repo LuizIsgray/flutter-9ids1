@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/screens/homeScreen.dart';
+import 'package:flutter9ids1/screens/loginScreen.dart';
 import 'package:flutter9ids1/screens/products/productsScreen.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -11,11 +12,11 @@ class DrawerWidget extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Colors.white),
               child: Column(
                 children: [
                   Expanded(child: Image.network("https://i.imgur.com/nMDaD07.jpg")),
-                  Text("Usuario")
+                  Text("Usuario", style: TextStyle(color: Colors.black),)
                 ],
               )),
           ListTile(
@@ -47,6 +48,17 @@ class DrawerWidget extends StatelessWidget {
             leading: Icon(Icons.sell),
             title: Text("Ventas"),
             onTap: () {},
+          ),
+          Divider(color: Colors.white),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text("Configuración"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            },
           ),
         ],
       ),
