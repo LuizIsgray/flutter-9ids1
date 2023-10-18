@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/widgets/drawerWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
 import 'package:quickalert/quickalert.dart';
@@ -22,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
         title: const Text("Akiba Shop"),
       ),
       body: Center(

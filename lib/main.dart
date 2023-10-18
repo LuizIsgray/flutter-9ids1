@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/utils/screensIndexUtil.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -22,7 +21,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromRGBO(192, 8, 18, 1),
+          titleTextStyle: TextStyle(fontSize: 25.0, color: Colors.white),
+        ),
+      ),
       title: 'Akiba Shop',
       initialRoute: "login",
       routes: rutas,

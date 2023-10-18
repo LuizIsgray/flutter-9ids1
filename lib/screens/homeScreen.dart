@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
         title: const Text("Home"),
       ),
     );

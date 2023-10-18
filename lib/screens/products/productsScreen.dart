@@ -13,7 +13,6 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-
   bool datosCargados = false;
   List productos = [];
 
@@ -31,6 +30,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: AppBar(
         title: const Text("Productos"),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
         onPressed: fnNavegarPaginaNuevoProducto,
@@ -43,8 +43,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
         child: RefreshIndicator(
           onRefresh: fnListarProductos,
           child: Visibility(
-            visible: productos
-                .isNotEmpty, //Cuando existen elementos = true y muestra los elementos
+            visible: productos.isNotEmpty,
+            //Cuando existen elementos = true y muestra los elementos
             replacement: const Center(
               child: Text("No hay elementos registrados"),
             ),
@@ -60,7 +60,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   child: ListTile(
                     leading: CircleAvatar(
                         backgroundColor: Colors.white,
-                        child: Text("${index + 1}", style: const TextStyle(color: Colors.black),)),
+                        child: Text(
+                          "${index + 1}",
+                          style: const TextStyle(color: Colors.black),
+                        )),
                     title: Text(producto["codigo"]),
                     subtitle: Row(
                       children: [
@@ -75,25 +78,29 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           fnNavegarPaginaEditarProducto(producto);
                         } else if (value == "delete") {
                           QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.confirm,
-                              title: "Eliminar elemento",
-                              text: "Esta acción es irreversible",
-                              confirmBtnText: "Eliminar",
-                              confirmBtnColor: Colors.red,
-                              onConfirmBtnTap: () {
-                                  fnEliminarProducto(id);
-                                  Navigator.pop(context);
-                              }
+                            context: context,
+                            type: QuickAlertType.confirm,
+                            title: "Eliminar elemento",
+                            text: "Esta acción es irreversible",
+                            confirmBtnText: "Eliminar",
+                            confirmBtnColor: Colors.red,
+                            onConfirmBtnTap: () {
+                              fnEliminarProducto(id);
+                              Navigator.pop(context);
+                            },
                           );
                         }
                       },
                       itemBuilder: (context) {
                         return [
-                          const PopupMenuItem(value: "edit", child: Text("Editar")),
                           const PopupMenuItem(
-                              value: "delete",
-                              child: Text("Eliminar")),
+                            value: "edit",
+                            child: Text("Editar"),
+                          ),
+                          const PopupMenuItem(
+                            value: "delete",
+                            child: Text("Eliminar"),
+                          ),
                         ];
                       },
                     ),
