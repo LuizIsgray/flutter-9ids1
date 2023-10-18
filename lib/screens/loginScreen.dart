@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final ip = "192.168.8.4";
+  final ip = "192.168.207.3";
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
@@ -69,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
                 ),
               ),
+              /*
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "home");
@@ -83,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
                 ),
               ),
+              */
             ],
           ),
         ),

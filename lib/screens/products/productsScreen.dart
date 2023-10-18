@@ -54,8 +54,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               itemBuilder: (context, index) {
                 final producto = productos[index]
                     as Map; //Map es para usar todos los datos en productos
-                final id = producto["id"]
-                    as int; //Se obtiene el valor "id" del producto seleccionado
+                final id = producto["id"] as int; //Se obtiene el valor "id" del producto seleccionado
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(

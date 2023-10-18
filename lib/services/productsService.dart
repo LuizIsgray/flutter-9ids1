@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 //Uso de la API en laravel de Products
 class ProductsService {
   //Variable para la dirección IP, para usar en todos los request
-  final ip = "192.168.8.4";
+  final ip = "192.168.207.3";
 
   static Future<List?> listarProductos() async {
     //List? vuelve la lista nullable, puede devolver null
