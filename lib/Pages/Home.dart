@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter9ids1/Models/ModelProductos.dart';
 import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 import 'package:flutter9ids1/Pages/Products/Products.dart';
+import 'package:flutter9ids1/Servicios/Ambiente.dart';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
 
   Future<void> fnProductos() async {
     var response = await http.get(
-        Uri.parse('http://172.20.10.3:8000/api/productos'),
+        Uri.parse('${Ambiente.urlServer}/api/productos'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> {
         title: Text(prod.descripcion),
         subtitle: Text("Precio: ${prod.precio}"),
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>NewProduct()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const NewProduct()));
         },
       );
 

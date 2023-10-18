@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/Servicios/Ambiente.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/Models/ModelLogin.dart';
 import 'package:flutter9ids1/Pages/Home.dart';
@@ -19,7 +20,7 @@ class _LoginState extends State<Login> {
 
   Future<void> fnLogin() async {
     var response = await http.post(
-        Uri.parse('http://172.20.10.3:8000/api/login'),
+        Uri.parse('${Ambiente.urlServer}/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,
