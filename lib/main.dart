@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromRGBO(192, 8, 18, 1),
           titleTextStyle: TextStyle(fontSize: 25.0, color: Colors.white),
         ),
+        dividerTheme: DividerThemeData(color: Colors.black87),
       ),
       title: 'Akiba Shop',
       initialRoute: "login",

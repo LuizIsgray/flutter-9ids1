@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/utils/preferencesUtil.dart';
 import 'package:flutter9ids1/widgets/drawerWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
@@ -18,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
+
+  //final Future<Preferences> _prefs = Preferences().userPreferences;
 
   @override
   Widget build(BuildContext context) {

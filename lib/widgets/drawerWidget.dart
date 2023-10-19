@@ -11,8 +11,12 @@ class DrawerWidget extends StatelessWidget {
           const UserAccountsDrawerHeader(
             accountEmail: Text("example.com"),
             accountName: Text("Luis"),
-            currentAccountPicture: CircleAvatar(foregroundImage: NetworkImage("https://i.imgur.com/nMDaD07.jpg")),
-            decoration: BoxDecoration(color: Colors.redAccent),
+            currentAccountPicture: CircleAvatar(
+              foregroundImage: AssetImage("assets/akiba_shop.png"),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.redAccent,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.home),
@@ -38,7 +42,7 @@ class DrawerWidget extends StatelessWidget {
             title: const Text("Ventas"),
             onTap: () {},
           ),
-          const Divider(color: Colors.white),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text("Configuración"),
@@ -46,7 +50,7 @@ class DrawerWidget extends StatelessWidget {
               Navigator.pushNamed(context, "configuration");
             },
           ),
-          const Divider(color: Colors.white),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("Cerrar sesión"),

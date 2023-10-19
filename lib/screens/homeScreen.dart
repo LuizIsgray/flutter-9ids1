@@ -16,6 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Home"),
       ),
+      body: const Center(
+        child: Image(image: AssetImage("assets/akiba_shop.png")),
+      ),
     );
   }
 }
