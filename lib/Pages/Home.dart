@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/Models/ModelProductos.dart';
+import 'package:flutter9ids1/Pages/Products/EditProduct.dart';
 import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 import 'package:flutter9ids1/Pages/Products/Products.dart';
 import 'package:flutter9ids1/Servicios/Ambiente.dart';
@@ -15,47 +15,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<ModelProductos> productos = [];
+  List productos = [];
 
-  Future<void> fnProductos() async {
-    var response = await http.get(
-        Uri.parse('${Ambiente.urlServer}/api/productos'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        });
-    print(response.body);
+  Future<void> fnObtenerProductos() async {
+    final response =
+        await http.get(Uri.parse('${Ambiente.urlServer}/api/productos'));
+
     if (response.statusCode == 200) {
-      Iterable l = jsonDecode(response.body);
-      productos = List<ModelProductos>.from(
-          l.map((model) => ModelProductos.fromJson(model)));
+      final json = jsonDecode(response.body);
+      final resultado = json as List;
+      setState(() {
+        productos = resultado;
+      });
     } else {
-      print("Ocurrio un error: " + response.statusCode.toString());
+      print("Error al consultar los elementos");
     }
   }
 
-  Widget _listViewProductos(List<ModelProductos> prods){
-    return ListView.builder(itemCount: prods.length,
-        itemBuilder: (context, index){
-      var prod = prods[index];
-      return ListTile(
-        leading: CircleAvatar(
-          child: Text(prod.codigo[0]),
-        ),
-        title: Text(prod.descripcion),
-        subtitle: Text("Precio: ${prod.precio}"),
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>const NewProduct()));
-        },
-      );
+  Future<void> fnNavegarPaginaEditarProducto(Map producto) async {
+    final route = MaterialPageRoute(
+        builder: (context) => EditProduct(
+            todo: producto)); //Se manda el producto seleccionado a la pagina
+    await Navigator.push(context, route);
+    /*setState(() {
+      datosCargados = true;
+    });*/
 
-    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fnProductos();
+    fnObtenerProductos();
   }
 
   @override
@@ -64,6 +56,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text("Home"),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -80,7 +73,7 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(color: Colors.blue),
                 child: Column(
                   children: [
-                    Expanded(child: Image.network('')),
+                    //Expanded(child: Image.network('')),
                     Text("Usuario")
                   ],
                 )),
@@ -117,7 +110,25 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: _listViewProductos(productos),
+      body: RefreshIndicator(
+        onRefresh: fnObtenerProductos,
+        child: ListView.builder(
+          itemCount: productos.length,
+          itemBuilder: (context, index) {
+            var prod = productos[index] as Map;
+            return ListTile(
+              leading: CircleAvatar(
+                child: Text(prod["codigo"][0]),
+              ),
+              title: Text(prod["descripcion"]),
+              subtitle: Text("Precio: ${prod["precio"]}"),
+              onTap: () {
+                fnNavegarPaginaEditarProducto(prod as Map);
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

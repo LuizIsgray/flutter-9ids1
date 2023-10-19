@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter9ids1/Pages/Home.dart';
 import 'package:flutter9ids1/Servicios/Ambiente.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter9ids1/Models/ModelProductos.dart';
 import 'package:quickalert/quickalert.dart';
 
 class NewProduct extends StatefulWidget {

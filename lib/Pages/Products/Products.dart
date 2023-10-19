@@ -32,7 +32,7 @@ class _ProductsState extends State<Products> {
                 decoration: BoxDecoration(color: Colors.blue),
                 child: Column(
                   children: [
-                    Expanded(child: Image.network('')),
+                    //Expanded(child: Image.network('')),
                     Text("Usuario")
                   ],
                 )),
