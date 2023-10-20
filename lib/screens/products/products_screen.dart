@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/screens/products/crudProductScreen.dart';
-import 'package:flutter9ids1/services/productsService.dart';
-import 'package:flutter9ids1/widgets/drawerWidget.dart';
-import 'package:flutter9ids1/utils/snackbarUtil.dart';
+import 'package:flutter9ids1/screens/products/product_detail_screen.dart';
+import 'package:flutter9ids1/services/products_service.dart';
+import 'package:flutter9ids1/widgets/drawer_widget.dart';
+import 'package:flutter9ids1/utils/snackbar_util.dart';
+import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
 import 'package:quickalert/quickalert.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -31,11 +32,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
         title: const Text("Productos"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
+        //onPressed: fnNavegarPaginaNuevoProducto,
         onPressed: fnNavegarPaginaNuevoProducto,
         child: const Icon(Icons.add, color: Colors.white),
       ),
+      */
+      floatingActionButton:
+          FloatingActionButtonWidget(onPressed: fnNavegarPaginaNuevoProducto),
       body: Visibility(
         visible:
             datosCargados, //Por defecto false, cuando se cargan true y muestra
@@ -46,7 +51,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
             visible: productos.isNotEmpty,
             //Cuando existen elementos = true y muestra los elementos
             replacement: const Center(
-              child: Text("No hay elementos registrados"),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.dangerous, size: 50.0),
+                  Text(
+                    "No hay elementos registrados",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
             child: ListView.builder(
               itemCount: productos.length,
@@ -116,6 +133,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> fnNavegarPaginaNuevoProducto() async {
     await Navigator.pushNamed(context, "products/nuevo");
+    //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProductDetailScreen()));
     setState(() {
       datosCargados = true;
     });
@@ -124,7 +142,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> fnNavegarPaginaEditarProducto(Map producto) async {
     final route = MaterialPageRoute(
-        builder: (context) => CrudProductScreen(
+        builder: (context) => ProductDetailScreen(
             todo: producto)); //Se manda el producto seleccionado a la pagina
     await Navigator.push(context, route);
     setState(() {

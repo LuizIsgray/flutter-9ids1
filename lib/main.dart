@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/utils/screensIndexUtil.dart';
+import 'package:flutter9ids1/utils/screens_index_util.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     "home": (context) => const HomeScreen(),
     "configuration": (context) => const ConfigurationScreen(),
     "products": (context) => const ProductsScreen(),
-    "products/nuevo": (context) => const CrudProductScreen(),
+    "products/nuevo": (context) => const ProductDetailScreen(),
   };
 
   // This widget is the root of your application.

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/services/productsService.dart';
-import 'package:flutter9ids1/utils/snackbarUtil.dart';
+import 'package:flutter9ids1/services/products_service.dart';
+import 'package:flutter9ids1/utils/snackbar_util.dart';
 
-class CrudProductScreen extends StatefulWidget {
+class ProductDetailScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
-  const CrudProductScreen({super.key, this.todo});
+  const ProductDetailScreen({super.key, this.todo});
 
   @override
-  State<CrudProductScreen> createState() => _CrudProductScreenState();
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-class _CrudProductScreenState extends State<CrudProductScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   TextEditingController txtCodigoController = TextEditingController();
   TextEditingController txtDescripcionController = TextEditingController();

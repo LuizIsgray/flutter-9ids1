@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/utils/preferencesUtil.dart';
-import 'package:flutter9ids1/widgets/drawerWidget.dart';
+import 'package:flutter9ids1/utils/preferences_util.dart';
+import 'package:flutter9ids1/widgets/drawer_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
 import 'package:quickalert/quickalert.dart';
@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final ip = "192.168.207.3";
+  final ip = "192.168.8.5";
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
                 ),
               ),
-              /*
+
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "home");
@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
                 ),
               ),
-              */
+
             ],
           ),
         ),
