@@ -1,11 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/Pages/Products/EditProduct.dart';
 import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 import 'package:flutter9ids1/Pages/Products/Products.dart';
-import 'package:flutter9ids1/Servicios/Ambiente.dart';
-import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,48 +12,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List productos = [];
-
-  Future<void> fnObtenerProductos() async {
-    final response =
-        await http.get(Uri.parse('${Ambiente.urlServer}/api/productos'));
-
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      final resultado = json as List;
-      setState(() {
-        productos = resultado;
-      });
-    } else {
-      print("Error al consultar los elementos");
-    }
-  }
-
-  Future<void> fnNavegarPaginaEditarProducto(Map producto) async {
-    final route = MaterialPageRoute(
-        builder: (context) => EditProduct(
-            todo: producto)); //Se manda el producto seleccionado a la pagina
-    await Navigator.push(context, route);
-    /*setState(() {
-      datosCargados = true;
-    });*/
-
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fnObtenerProductos();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("CASA"),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -108,25 +70,6 @@ class _HomeState extends State<Home> {
               onTap: () {},
             ),
           ],
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: fnObtenerProductos,
-        child: ListView.builder(
-          itemCount: productos.length,
-          itemBuilder: (context, index) {
-            var prod = productos[index] as Map;
-            return ListTile(
-              leading: CircleAvatar(
-                child: Text(prod["codigo"][0]),
-              ),
-              title: Text(prod["descripcion"]),
-              subtitle: Text("Precio: ${prod["precio"]}"),
-              onTap: () {
-                fnNavegarPaginaEditarProducto(prod as Map);
-              },
-            );
-          },
         ),
       ),
     );
