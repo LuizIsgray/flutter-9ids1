@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
     "configuration": (context) => const ConfigurationScreen(),
     "products": (context) => const ProductsScreen(),
     "products/nuevo": (context) => const ProductDetailScreen(),
+    "clients": (context) => const ClientsScreen(),
+    "clients/nuevo": (context) => const ClientDetailScreen(),
   };
 
   // This widget is the root of your application.

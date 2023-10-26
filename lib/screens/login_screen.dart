@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter9ids1/utils/preferences_util.dart';
-import 'package:flutter9ids1/widgets/drawer_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
 import 'package:quickalert/quickalert.dart';
@@ -15,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final ip = "192.168.8.5";
+  final ip = "192.168.8.9";
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();

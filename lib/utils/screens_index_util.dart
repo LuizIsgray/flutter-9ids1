@@ -5,3 +5,6 @@ export 'package:flutter9ids1/screens/configuration_screen.dart';
 
 export 'package:flutter9ids1/screens/products/products_screen.dart';
 export 'package:flutter9ids1/screens/products/product_detail_screen.dart';
+
+export 'package:flutter9ids1/screens/clients/clients_screen.dart';
+export 'package:flutter9ids1/screens/clients/client_detail_screen.dart';

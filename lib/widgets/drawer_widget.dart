@@ -28,14 +28,12 @@ class DrawerWidget extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.shopping_bag),
             title: const Text("Productos"),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, "products");
-            },
+            onTap: () => Navigator.pushReplacementNamed(context, "products"),
           ),
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text("Clientes"),
-            onTap: () {},
+            onTap: () => Navigator.pushReplacementNamed(context, "clients"),
           ),
           ListTile(
             leading: const Icon(Icons.sell),
