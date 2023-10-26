@@ -33,10 +33,10 @@ class _ClientsScreenState extends State<ClientsScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton:
-      FloatingActionButtonWidget(onPressed: fnNavegarPaginaNuevoCliente),
+          FloatingActionButtonWidget(onPressed: fnNavegarPaginaNuevoCliente),
       body: Visibility(
         visible:
-        datosCargados, //Por defecto false, cuando se cargan true y muestra
+            datosCargados, //Por defecto false, cuando se cargan true y muestra
         replacement: const Center(child: CircularProgressIndicator()),
         child: RefreshIndicator(
           onRefresh: fnListarClientes,
@@ -63,9 +63,9 @@ class _ClientsScreenState extends State<ClientsScreen> {
               padding: const EdgeInsets.all(12),
               itemBuilder: (context, index) {
                 final cliente = clientes[index]
-                as Map; //Map es para usar todos los datos en clientes
+                    as Map; //Map es para usar todos los datos en clientes
                 final id = cliente["id"]
-                as int; //Se obtiene el valor "id" del cliente seleccionado
+                    as int; //Se obtiene el valor "id" del cliente seleccionado
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
@@ -119,7 +119,10 @@ class _ClientsScreenState extends State<ClientsScreen> {
                           ),
                           const PopupMenuItem(
                             value: "delete",
-                            child: Text("Eliminar"),
+                            child: Text(
+                              "Eliminar",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ];
                       },
@@ -145,9 +148,8 @@ class _ClientsScreenState extends State<ClientsScreen> {
 
   Future<void> fnNavegarPaginaEditarCliente(Map cliente) async {
     final route = MaterialPageRoute(
-        builder: (context) =>
-            ClientDetailScreen(
-                todo: cliente)); //Se manda el cliente seleccionado a la pagina
+        builder: (context) => ClientDetailScreen(
+            todo: cliente)); //Se manda el cliente seleccionado a la pagina
     await Navigator.push(context, route);
     setState(() {
       datosCargados = true;
@@ -161,7 +163,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
     if (isSuccess) {
       //Remover elemento de la lista
       final filtrado =
-      clientes.where((element) => element["id"] != id).toList();
+          clientes.where((element) => element["id"] != id).toList();
       setState(() {
         clientes = filtrado;
       });
