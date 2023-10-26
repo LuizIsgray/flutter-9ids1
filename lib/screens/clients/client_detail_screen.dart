@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/services/clients_service.dart';
+import 'package:flutter9ids1/utils/geolocator_util.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ClientDetailScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
@@ -11,13 +13,12 @@ class ClientDetailScreen extends StatefulWidget {
 }
 
 class _ClientDetailScreenState extends State<ClientDetailScreen> {
-
   TextEditingController txtNombreController = TextEditingController();
   TextEditingController txtTelefonoController = TextEditingController();
   TextEditingController txtDireccionController = TextEditingController();
   TextEditingController txtUbicacionLatitudController = TextEditingController();
-  TextEditingController txtUbicacionLongitudController = TextEditingController();
-
+  TextEditingController txtUbicacionLongitudController =
+      TextEditingController();
 
   bool esEdicion = false;
 
@@ -65,30 +66,58 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
             keyboardType: TextInputType.streetAddress,
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Dirección'),
-          ),TextField(
+          ),
+          const SizedBox(height: 40),
+          Text("Ubicación", style: TextStyle(fontSize: 25.0)),
+          TextField(
             controller: txtUbicacionLatitudController,
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Latitud'),
-          ),TextField(
+          ),
+          const SizedBox(height: 20),
+          TextField(
             controller: txtUbicacionLongitudController,
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), hintText: 'Longitud'),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
+            //onPressed: esEdicion ? fnActualizarCliente : fnAgregarCliente,
+            onPressed: fnObtenerUbicacion,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                  const Color.fromRGBO(36, 82, 204, 1.0)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(esEdicion ? "Actualizar ubicación" : "Obtener ubicación",
+                  style: const TextStyle(color: Colors.white, fontSize: 20)),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
             onPressed: esEdicion ? fnActualizarCliente : fnAgregarCliente,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(192, 8, 18, 1)),
+              backgroundColor: MaterialStateProperty.all(
+                  const Color.fromRGBO(192, 8, 18, 1)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(esEdicion ? "Actualizar" : "Agregar",
                   style: const TextStyle(color: Colors.white, fontSize: 20)),
             ),
-          )
+          ),
         ],
       ),
     );
+  }
+
+  void fnObtenerUbicacion() async{
+    Position position = await fnDeterminarUbicacion();
+    print(position.latitude);
+    print(position.longitude);
+    txtUbicacionLatitudController.text = position.latitude.toString();
+    txtUbicacionLongitudController.text = position.longitude.toString();
   }
 
   Future<void> fnAgregarCliente() async {
