@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/services/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter9ids1/models/ModelLogin.dart';
 import 'package:quickalert/quickalert.dart';
@@ -13,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final ip = "192.168.8.9";
+  final urlServer = Environment.urlServer;
 
   TextEditingController txtUserController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> fnLogin() async {
-    var response = await http.post(Uri.parse('http://$ip:8000/api/login'),
+    var response = await http.post(Uri.parse('http://$urlServer:8000/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,
