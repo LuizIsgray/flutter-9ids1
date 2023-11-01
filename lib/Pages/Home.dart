@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/Pages/Clients/Clients.dart';
 import 'package:flutter9ids1/Pages/Products/NewProduct.dart';
 import 'package:flutter9ids1/Pages/Products/Products.dart';
 
@@ -62,7 +63,10 @@ class _HomeState extends State<Home> {
             ListTile(
               leading: Icon(Icons.person),
               title: Text("Clientes"),
-              onTap: () {},
+              onTap: () {Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Clients()),
+              );},
             ),
             ListTile(
               leading: Icon(Icons.sell),
