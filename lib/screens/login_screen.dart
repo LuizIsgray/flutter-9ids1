@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> fnLogin() async {
-    var response = await http.post(Uri.parse('http://$urlServer:8000/api/login'),
+    var response = await http.post(Uri.parse('$urlServer/api/login'),
         body: jsonEncode(<String, String>{
           'email': txtUserController.text,
           'password': txtPasswordController.text,

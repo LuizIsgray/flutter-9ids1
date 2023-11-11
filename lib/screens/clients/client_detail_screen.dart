@@ -68,7 +68,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                 border: UnderlineInputBorder(), hintText: 'Dirección'),
           ),
           const SizedBox(height: 40),
-          Text("Ubicación", style: TextStyle(fontSize: 25.0)),
+          const Text("Ubicación", style: TextStyle(fontSize: 25.0)),
           TextField(
             controller: txtUbicacionLatitudController,
             decoration: const InputDecoration(
@@ -114,8 +114,8 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
 
   void fnObtenerUbicacion() async{
     Position position = await fnDeterminarUbicacion();
-    print(position.latitude);
-    print(position.longitude);
+    //print(position.latitude);
+    //print(position.longitude);
     txtUbicacionLatitudController.text = position.latitude.toString();
     txtUbicacionLongitudController.text = position.longitude.toString();
   }

@@ -37,8 +37,8 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.sell),
-            title: const Text("Ventas"),
-            onTap: () {},
+            title: const Text("Pedidos"),
+            onTap: () => Navigator.pushReplacementNamed(context, "orders"),
           ),
           const Divider(),
           ListTile(

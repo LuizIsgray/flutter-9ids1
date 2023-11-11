@@ -6,7 +6,7 @@ Future<Position> fnDeterminarUbicacion() async {
   if(permission == LocationPermission.denied){
     permission = await Geolocator.requestPermission();
     if(permission == LocationPermission.denied){
-      print('Error al obtener la ubicación');
+      //print('Error al obtener la ubicación');
       return Future.error('Error al obtener la ubicación');
     }
   }
