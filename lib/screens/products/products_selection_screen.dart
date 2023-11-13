@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/screens/products/product_detail_screen.dart';
 import 'package:flutter9ids1/services/products_service.dart';
+import 'package:flutter9ids1/widgets/drawer_widget.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
 import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
+import 'package:quickalert/quickalert.dart';
 
-class ProductsTab extends StatefulWidget {
-  const ProductsTab({super.key});
+class ProductsSelectionScreen extends StatefulWidget {
+  const ProductsSelectionScreen({super.key});
 
   @override
-  State<ProductsTab> createState() => _ProductsTabState();
+  State<ProductsSelectionScreen> createState() =>
+      _ProductsSelectionScreenState();
 }
 
-class _ProductsTabState extends State<ProductsTab> {
+class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
   bool datosCargados = false;
   List productos = [];
 
@@ -24,9 +28,9 @@ class _ProductsTabState extends State<ProductsTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-      FloatingActionButtonWidget(onPressed: fnNavegarPaginaAgregarProducto),
+      appBar: AppBar(
+        title: const Text("Seleccione un producto ^^"),
+      ),
       body: Visibility(
         visible:
             datosCargados, //Por defecto false, cuando se cargan true y muestra
@@ -61,6 +65,11 @@ class _ProductsTabState extends State<ProductsTab> {
                     as int; //Se obtiene el valor "id" del producto seleccionado
                 return Card(
                   child: ListTile(
+                    onTap: () {
+                      print(producto["id"].toString() +
+                          " " +
+                          producto["descripcion"]);
+                    },
                     leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Text(
@@ -75,6 +84,10 @@ class _ProductsTabState extends State<ProductsTab> {
                         Text(producto["precio"]),
                       ],
                     ),
+                    trailing: const Icon(
+                      Icons.keyboard_arrow_right,
+                      size: 30.0,
+                    ),
                   ),
                 );
               },
@@ -83,6 +96,42 @@ class _ProductsTabState extends State<ProductsTab> {
         ),
       ),
     );
+  }
+
+  Future<void> fnNavegarPaginaNuevoProducto() async {
+    await Navigator.pushNamed(context, "products/nuevo");
+    //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProductDetailScreen()));
+    setState(() {
+      datosCargados = true;
+    });
+    fnListarProductos();
+  }
+
+  Future<void> fnNavegarPaginaEditarProducto(Map producto) async {
+    final route = MaterialPageRoute(
+        builder: (context) => ProductDetailScreen(
+            todo: producto)); //Se manda el producto seleccionado a la pagina
+    await Navigator.push(context, route);
+    setState(() {
+      datosCargados = true;
+    });
+    fnListarProductos();
+  }
+
+  Future<void> fnEliminarProducto(int id) async {
+    //Borrar elemento usando servicio
+    final isSuccess = await ProductsService.borrarProducto(id);
+    if (isSuccess) {
+      //Remover elemento de la lista
+      final filtrado =
+          productos.where((element) => element["id"] != id).toList();
+      setState(() {
+        productos = filtrado;
+      });
+      mostrarMensajeExito(context, "Eliminado con éxito");
+    } else {
+      mostrarMensajeError(context, "Error al eliminar el elemento");
+    }
   }
 
   Future<void> fnListarProductos() async {
@@ -99,14 +148,4 @@ class _ProductsTabState extends State<ProductsTab> {
       datosCargados = true;
     });
   }
-
-  Future<void> fnNavegarPaginaAgregarProducto() async {
-    await Navigator.pushNamed(context, "products/seleccionar");
-    //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProductDetailScreen()));
-    setState(() {
-      datosCargados = true;
-    });
-    fnListarProductos();
-  }
-
 }

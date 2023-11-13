@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/utils/screens_index_util.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    //Facilitar los providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => OrderClientProvider(),
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +26,7 @@ class MyApp extends StatelessWidget {
     "configuration": (context) => const ConfigurationScreen(),
     "products": (context) => const ProductsScreen(),
     "products/nuevo": (context) => const ProductDetailScreen(),
+    "products/seleccionar": (context) => const ProductsSelectionScreen(),
     "clients": (context) => const ClientsScreen(),
     "clients/nuevo": (context) => const ClientDetailScreen(),
     "orders": (context) => const OrdersScreen(),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/screens/orders/tabs/client_tab.dart';
 import 'package:flutter9ids1/screens/orders/tabs/products_tab.dart';
 import 'package:flutter9ids1/services/orders_service.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
+import 'package:provider/provider.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final Map? todo; //Se examina los parametros
@@ -19,6 +21,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   TextEditingController txtPrecioController = TextEditingController();
 
   bool esEdicion = false;
+
+  String selectedOption = ""; // Variable para almacenar la opción seleccionada
 
   @override
   void initState() {
@@ -58,18 +62,66 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          surfaceTintColor: Colors.white,
-          child: ElevatedButton(
-            onPressed: esEdicion ? fnActualizarPedido : fnAgregarPedido,
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                  const Color.fromRGBO(192, 8, 18, 1)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(esEdicion ? "Actualizar" : "Agregar",
-                  style: const TextStyle(color: Colors.white, fontSize: 20)),
-            ),
+          height: 155.0,
+          surfaceTintColor: Colors.redAccent,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              // Mostrar la opción seleccionada encima del botón "Agregar"
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    if (context.watch<OrderClientProvider>().idCliente != 0)
+                      Text(
+                        //"Opción seleccionada: $selectedOption",
+                        context
+                            .watch<OrderClientProvider>()
+                            .idCliente
+                            .toString(),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    Text(
+                      //"Opción seleccionada: $selectedOption",
+                      context.watch<OrderClientProvider>().nombreCliente,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  esEdicion ? fnActualizarPedido : fnAgregarPedido;
+                  context.read<OrderClientProvider>().changeClient(
+                        newIdCliente: 0,
+                        newNombreCliente: "",
+                      );
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      const Color.fromRGBO(192, 8, 18, 1)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        esEdicion ? "Actualizar" : "Agregar",
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      const Text(
+                        "Total a pagar: 5555",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

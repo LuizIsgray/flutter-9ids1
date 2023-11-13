@@ -1,6 +1,9 @@
+import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/screens/orders/order_detail_screen.dart';
 import 'package:flutter9ids1/services/clients_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
+import 'package:provider/provider.dart';
 
 class ClientTab extends StatefulWidget {
   const ClientTab({super.key});
@@ -55,9 +58,14 @@ class _ClientTabState extends State<ClientTab> {
               final id = cliente["id"]
               as int; //Se obtiene el valor "id" del cliente seleccionado
               return Card(
+                color: cliente["id"] == context.watch<OrderClientProvider>().idCliente ? const Color.fromRGBO(192, 8, 18, 1) : null,
+
                 child: ListTile(
                   onTap: () {
-
+                    context.read<OrderClientProvider>().changeClient(
+                      newIdCliente: cliente["id"],
+                      newNombreCliente: cliente["nombre"].toString(),);
+                    print("seleccionado: ${cliente["nombre"]}");
                   },
                   leading: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -66,6 +74,9 @@ class _ClientTabState extends State<ClientTab> {
                         style: const TextStyle(color: Colors.black),
                       )),
                   title: Text(cliente["telefono"]),
+                  textColor:
+                  cliente["id"] == context.watch<OrderClientProvider>().idCliente ?
+                  Colors.white : null,
                   subtitle: Column(
                     children: [
                       Row(
