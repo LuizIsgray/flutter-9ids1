@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/screens/orders/order_detail_screen.dart';
 import 'package:flutter9ids1/services/orders_service.dart';
 import 'package:flutter9ids1/widgets/drawer_widget.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
 import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -137,6 +139,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
       datosCargados = true;
     });
     fnListarPedidos();
+    //SE comentó
+    //context.read<OrderClientProvider>().addToCart(nuevoProducto: const[]);
   }
 
   Future<void> fnNavegarPaginaEditarPedido(Map pedido) async {

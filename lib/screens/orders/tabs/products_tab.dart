@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
 import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProductsTab extends StatefulWidget {
   const ProductsTab({super.key});
@@ -86,15 +88,18 @@ class _ProductsTabState extends State<ProductsTab> {
   }
 
   Future<void> fnListarProductos() async {
-    final respuesta = await ProductsService.listarProductos();
 
+    final respuesta = await ProductsService.listarProductos();
+    //final respuesta = context.watch<OrderClientProvider>().productosCarrito;
+    //print(respuesta);
     if (respuesta != null) {
       setState(() {
-        productos = respuesta;
+        productos = respuesta as List;
       });
     } else {
       mostrarMensajeError(context, "Error al consultar los elementos");
     }
+
     setState(() {
       datosCargados = true;
     });
