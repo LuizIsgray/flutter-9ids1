@@ -66,7 +66,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
               itemBuilder: (context, index) {
                 final pedido = pedidos[index]
                     as Map; //Map es para usar todos los datos en pedidos
-                final id = pedido["id"] as int; //Se obtiene el valor "id" del pedido seleccionado
+                final id = pedido["id"]
+                    as int; //Se obtiene el valor "id" del pedido seleccionado
                 final clienteNombre = pedido["cliente"]["nombre"];
                 return Card(
                   child: ListTile(
@@ -117,7 +118,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           ),
                           const PopupMenuItem(
                             value: "delete",
-                            child: Text("Eliminar"),
+                            child: Text(
+                              "Eliminar",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ];
                       },
@@ -159,8 +163,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final isSuccess = await OrdersService.borrarPedido(id);
     if (isSuccess) {
       //Remover elemento de la lista
-      final filtrado =
-          pedidos.where((element) => element["id"] != id).toList();
+      final filtrado = pedidos.where((element) => element["id"] != id).toList();
       setState(() {
         pedidos = filtrado;
       });

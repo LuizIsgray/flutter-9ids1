@@ -116,7 +116,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                           const PopupMenuItem(
                             value: "delete",
-                            child: Text("Eliminar"),
+                            child: Text(
+                              "Eliminar",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ];
                       },

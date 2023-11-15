@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/providers/order_client_provider.dart';
+import 'package:flutter9ids1/services/order_details_service.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
 import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
@@ -20,7 +21,7 @@ class _ProductsTabState extends State<ProductsTab> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fnActualizar();
+    fnActualizarCarrito();
   }
 
   @override
@@ -42,7 +43,8 @@ class _ProductsTabState extends State<ProductsTab> {
                   icon: Icon(Icons.refresh),
                   onPressed: () {
                     print('Botón presionado');
-                    fnActualizar();
+                    fnActualizarCarrito();
+                    //fnAgregarPedido();
                   },
                 ),
               ],
@@ -76,6 +78,8 @@ class _ProductsTabState extends State<ProductsTab> {
                   final id = producto["id"] as int;
                   print("el final: $id");
                   print(producto["id"]);
+
+                  print(productosCarrito);
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
@@ -101,11 +105,10 @@ class _ProductsTabState extends State<ProductsTab> {
           ),
         ],
       ),
-
     );
   }
 
-  Future<void> fnActualizar() async {
+  Future<void> fnActualizarCarrito() async {
     //final respuesta = await ProductsService.listarProductos();
     //Provider.of<OrderClientProvider>(context, listen: false);
     // Obtener la instancia de OrderClientProvider sin escuchar cambios
@@ -121,10 +124,73 @@ class _ProductsTabState extends State<ProductsTab> {
       mostrarMensajeError(context, "Error al consultar los elementos");
     }
 
-    print(productosCarrito);
+    print("fnActualizar: $productosCarrito");
     setState(() {
       datosCargados = true;
     });
+  }
+
+  Future<void> fnAgregarDetallesPedido() async {
+    print("fnAgregarPedido: $productosCarrito");
+    for (var producto in productosCarrito) {
+      print("fnAgregarPedidoFOR: ${productosCarrito[0]["id"]}");
+      //Obtener datos del formulario
+      final producto_id = producto["id"];
+      final cantidad = producto["cantidad"];
+      final total = producto["total"];
+
+      final body = {
+        "producto_id": producto_id,
+        "cantidad": cantidad,
+        "total": total,
+      };
+      //Enviar información al servidor
+      final isSuccess = await OrderDetailsService.agregarDetallePedido(body);
+
+      //Mostrar respuesta segun el estado devuelto
+      if (isSuccess) {
+        /*
+        txtCodigoController.text = "";
+        txtDescripcionController.text = "";
+        txtPrecioController.text = "";
+        */
+        context.read<OrderClientProvider>().clearData();
+
+        mostrarMensajeExito(context, "Agregado con éxito");
+
+        Navigator.pop(context);
+      } else {
+        mostrarMensajeError(context, "Error al agregar el elemento");
+      }
+    }
+
+    //print(response.statusCode);
+    //print(response.body);
+    /*
+    var response = await http.post(
+        Uri.parse('http://192.168.8.4:8000/api/productos/nuevo'),
+        body: jsonEncode(<String, String>{
+          'producto_id': txtCodigoController.text,
+          'cantidad': txtDescripcionController.text,
+          'total': txtPrecioController.text,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        });
+    var respuesta = response.body;
+    //Implementar quickalert
+    if (respuesta == "OK") {
+      //Mensaje ok depende de laravel
+      Navigator.pop(context);
+    } else {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: "No se pudo agregar el producto",
+      );
+    }
+     */
   }
 
   /*Future<void> fnListarProductos() async {

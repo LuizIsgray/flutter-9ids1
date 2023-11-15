@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter9ids1/models/product_model.dart';
 import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/screens/orders/tabs/client_tab.dart';
 import 'package:flutter9ids1/screens/orders/tabs/products_tab.dart';
+import 'package:flutter9ids1/services/order_details_service.dart';
 import 'package:flutter9ids1/services/orders_service.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
@@ -16,13 +20,11 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  TextEditingController txtCodigoController = TextEditingController();
-  TextEditingController txtDescripcionController = TextEditingController();
-  TextEditingController txtPrecioController = TextEditingController();
-
   bool esEdicion = false;
 
-  String selectedOption = ""; // Variable para almacenar la opción seleccionada
+  int pedidoId = 0; // Variable para almacenar la opción seleccionada
+
+  List productosCarrito = [];
 
   @override
   void initState() {
@@ -30,9 +32,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final todo = widget.todo;
     if (todo != null) {
       esEdicion = true;
-      txtCodigoController.text = todo["codigo"];
-      txtDescripcionController.text = todo["descripcion"];
-      txtPrecioController.text = todo["precio"];
     }
   }
 
@@ -75,7 +74,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     if (context.watch<OrderClientProvider>().idCliente != 0)
                       Text(
-                        //"Opción seleccionada: $selectedOption",
+                        //"Opción seleccionada: $cliente_id",
                         context
                             .watch<OrderClientProvider>()
                             .idCliente
@@ -84,7 +83,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     Text(
-                      //"Opción seleccionada: $selectedOption",
+                      //"Opción seleccionada: $cliente_id",
                       context.watch<OrderClientProvider>().nombreCliente,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -94,11 +93,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  esEdicion ? fnActualizarPedido : fnAgregarPedido;
+                  //esEdicion ? fnActualizarPedido() : fnAgregarPedido();
+                  if (esEdicion) {
+                    fnActualizarPedido();
+                  } else {
+                    fnAgregarPedido();
+                    //fnAgregarDetallesPedido();
+                  }
+                  //esEdicion ? fnActualizarPedido() : fnAgregarPedido();
+                  Navigator.pop(context);
+
                   context.read<OrderClientProvider>().changeClient(
                         newIdCliente: 0,
                         newNombreCliente: "",
                       );
+
+
+                  //context.read<OrderClientProvider>().clearData();
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
@@ -109,7 +120,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   child: Column(
                     children: [
                       Text(
-                        esEdicion ? "Actualizar" : "Agregar",
+                        esEdicion ? "Actualizar Pedido" : "Agregar Pedido",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -131,58 +142,47 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Future<void> fnAgregarPedido() async {
+    print("fnAgregarPedido Order_Detail");
+
+    final orderClientProvider =
+        Provider.of<OrderClientProvider>(context, listen: false);
     //Obtener datos del formulario
-    final codigo = txtCodigoController.text;
-    final descripcion = txtDescripcionController.text;
-    final precio = txtPrecioController.text;
+    final numero_pedido = "AAAXXX";
+    final fecha_hora = DateTime.now().toLocal().toString();
+    final cliente_id = orderClientProvider.idCliente;
     final body = {
-      "codigo": codigo,
-      "descripcion": descripcion,
-      "precio": precio,
+      "numero_pedido": numero_pedido,
+      "fecha_hora": fecha_hora,
+      "cliente_id": cliente_id,
     };
-
     //Enviar información al servidor
-    final isSuccess = await OrdersService.agregarPedido(body);
-
+    final response = await OrdersService.agregarPedido(body);
+    print(response.body);
+    Map<String, dynamic> jsonResp = jsonDecode(response.body);
+    print(pedidoId);
     //Mostrar respuesta segun el estado devuelto
-    if (isSuccess) {
-      txtCodigoController.text = "";
-      txtDescripcionController.text = "";
-      txtPrecioController.text = "";
+    if (response.statusCode == 200) {
+      pedidoId = jsonResp["id"];
+      fnAgregarDetallesPedido();
+      /*
+      context.read<OrderClientProvider>().changeClient(
+            newIdCliente: 0,
+            newNombreCliente: "",
+          );
 
-      mostrarMensajeExito(context, "Agregado con éxito");
+       */
+      //print(response.body);
+
+
+      //mostrarMensajeExito(context, "Agregado con éxito");
 
       Navigator.pop(context);
     } else {
-      mostrarMensajeError(context, "Error al agregar el elemento");
+      //mostrarMensajeError(context, "Error al agregar el elemento");
     }
+
     //print(response.statusCode);
     //print(response.body);
-    /*
-    var response = await http.post(
-        Uri.parse('http://192.168.8.4:8000/api/productos/nuevo'),
-        body: jsonEncode(<String, String>{
-          'codigo': txtCodigoController.text,
-          'descripcion': txtDescripcionController.text,
-          'precio': txtPrecioController.text,
-        }),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        });
-    var respuesta = response.body;
-    //Implementar quickalert
-    if (respuesta == "OK") {
-      //Mensaje ok depende de laravel
-      Navigator.pop(context);
-    } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Oops...',
-        text: "No se pudo agregar el producto",
-      );
-    }
-     */
   }
 
   Future<void> fnActualizarPedido() async {
@@ -193,13 +193,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       return;
     }
     final id = todo["id"];
-    final codigo = txtCodigoController.text;
-    final descripcion = txtDescripcionController.text;
-    final precio = txtPrecioController.text;
+    final numero_pedido = todo["numero_pedido"];
+    final fecha_hora = todo["fecha_hora"];
+    final cliente_id = todo["cliente_id"];
     final body = {
-      "codigo": codigo,
-      "descripcion": descripcion,
-      "precio": precio,
+      "numero_pedido": numero_pedido,
+      "fecha_hora": fecha_hora,
+      "cliente_id": cliente_id,
     };
 
     //Enviar información ACTUALIZADA al servidor
@@ -211,6 +211,55 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       Navigator.pop(context);
     } else {
       mostrarMensajeError(context, "Error al actualizar el elemento");
+    }
+  }
+
+  Future<void> fnAgregarDetallesPedido() async {
+    print("fnAgregarDEtalle");
+    final orderClientProvider =
+        Provider.of<OrderClientProvider>(context, listen: false);
+    final respuesta = orderClientProvider.productosCarrito;
+    //print(respuesta);
+    if (respuesta != null) {
+      setState(() {
+        productosCarrito = respuesta as List;
+      });
+    } else {
+      mostrarMensajeError(context, "Error al consultar los elementos");
+    }
+    print("fnAgregarPedido: $productosCarrito");
+    for (var producto in productosCarrito) {
+      print("fnAgregarPedidoFOR: ${productosCarrito[0]["id"]}");
+      //Obtener datos del formulario
+      final pedido_id = pedidoId;
+      final producto_id = producto["id"];
+      final cantidad = producto["cantidad"];
+      final total = producto["total"];
+
+      final body = {
+        "pedido_id": pedido_id,
+        "producto_id": producto_id,
+        "cantidad": cantidad,
+        "total": total,
+      };
+      //Enviar información al servidor
+      final isSuccess = await OrderDetailsService.agregarDetallePedido(body);
+
+      //Mostrar respuesta segun el estado devuelto
+      if (isSuccess) {
+        /*
+        txtCodigoController.text = "";
+        txtDescripcionController.text = "";
+        txtPrecioController.text = "";
+        */
+        context.read<OrderClientProvider>().clearData();
+
+        mostrarMensajeExito(context, "Agregado con éxito");
+
+        Navigator.pop(context);
+      } else {
+        mostrarMensajeError(context, "Error al agregar el elemento");
+      }
     }
   }
 }

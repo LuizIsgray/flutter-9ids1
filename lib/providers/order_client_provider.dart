@@ -3,7 +3,7 @@ import 'package:flutter9ids1/models/product_model.dart';
 
 class OrderClientProvider extends ChangeNotifier {
   int idCliente, idProducto, cantidad;
-  double total;
+  double total, totalCarrito;
   String nombreCliente;
 
   List<Map<String, dynamic>> productosCarrito = [];
@@ -14,6 +14,7 @@ class OrderClientProvider extends ChangeNotifier {
     this.idProducto = 0,
     this.cantidad = 0,
     this.total = 0.0,
+    this.totalCarrito = 0.0,
     List<Map<String, dynamic>>? productosCarrito,
   }) : this.productosCarrito = productosCarrito ?? [];
 
@@ -44,7 +45,18 @@ class OrderClientProvider extends ChangeNotifier {
     print("añadido");
     print(productosCarrito);
     print("Carrito: $productosCarrito");
+
+    totalCarrito += total;
+    print("total carrito: $totalCarrito");
     notifyListeners();
+  }
+
+  void clearData(){
+    idProducto = 0;
+    cantidad = 0;
+    total = 0.0;
+    totalCarrito = 0.0;
+    productosCarrito = [];
   }
 }
 

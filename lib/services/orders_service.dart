@@ -25,7 +25,7 @@ class OrdersService {
     }
   }
 
-  static Future<bool> agregarPedido(Map body) async{
+  static Future<http.Response> agregarPedido(Map body) async{
     final url = "${OrdersService().urlServer}/api/pedidos";
     final uri = Uri.parse(url);
     final response = await http.post(uri,
@@ -33,7 +33,7 @@ class OrdersService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
-    return response.statusCode == 200;
+    return response;
   }
 
   static Future<bool> actualizarPedido(int id, Map body) async{
@@ -44,6 +44,7 @@ class OrdersService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
+    print(response.body);
     return response.statusCode == 200;
   }
 
