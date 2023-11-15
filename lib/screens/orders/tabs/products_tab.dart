@@ -14,13 +14,13 @@ class ProductsTab extends StatefulWidget {
 
 class _ProductsTabState extends State<ProductsTab> {
   bool datosCargados = false;
-  List productos = [];
+  List productosCarrito = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fnListarProductos();
+    fnActualizar();
   }
 
   @override
@@ -28,15 +28,28 @@ class _ProductsTabState extends State<ProductsTab> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton:
-      FloatingActionButtonWidget(onPressed: fnNavegarPaginaAgregarProducto),
-      body: Visibility(
-        visible:
-            datosCargados, //Por defecto false, cuando se cargan true y muestra
-        replacement: const Center(child: CircularProgressIndicator()),
-        child: RefreshIndicator(
-          onRefresh: fnListarProductos,
-          child: Visibility(
-            visible: productos.isNotEmpty,
+          FloatingActionButtonWidget(onPressed: fnNavegarPaginaAgregarProducto),
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text("Actualizar Carrito"),
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    print('Botón presionado');
+                    fnActualizar();
+                  },
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: productosCarrito.isNotEmpty,
             //Cuando existen elementos = true y muestra los elementos
             replacement: const Center(
               child: Column(
@@ -44,7 +57,7 @@ class _ProductsTabState extends State<ProductsTab> {
                 children: [
                   Icon(Icons.dangerous, size: 50.0),
                   Text(
-                    "No hay elementos registrados",
+                    "No hay elementos en el carrito",
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -53,44 +66,71 @@ class _ProductsTabState extends State<ProductsTab> {
                 ],
               ),
             ),
-            child: ListView.builder(
-              itemCount: productos.length,
-              padding: const EdgeInsets.all(12),
-              itemBuilder: (context, index) {
-                final producto = productos[index]
-                    as Map; //Map es para usar todos los datos en productos
-                final id = producto["id"]
-                    as int; //Se obtiene el valor "id" del producto seleccionado
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
+            child: Expanded(
+              child: ListView.builder(
+                itemCount: productosCarrito.length,
+                padding: const EdgeInsets.all(12),
+                itemBuilder: (context, index) {
+                  final producto = productosCarrito[index] as Map;
+                  print(producto);
+                  final id = producto["id"] as int;
+                  print("el final: $id");
+                  print(producto["id"]);
+                  return Card(
+                    child: ListTile(
+                      leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Text(
-                          "${index + 1}",
+                          "${producto["id"]}",
                           style: const TextStyle(color: Colors.black),
-                        )),
-                    title: Text(producto["codigo"]),
-                    subtitle: Row(
-                      children: [
-                        Text(producto["descripcion"]),
-                        const SizedBox(width: 20),
-                        Text(producto["precio"]),
-                      ],
+                        ),
+                      ),
+                      title: Text(producto["id"].toString()),
+                      subtitle: Row(
+                        children: [
+                          Text(producto["cantidad"].toString()),
+                          const SizedBox(width: 20),
+                          Text(producto["total"].toString()),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ),
+        ],
       ),
+
     );
   }
 
-  Future<void> fnListarProductos() async {
+  Future<void> fnActualizar() async {
+    //final respuesta = await ProductsService.listarProductos();
+    //Provider.of<OrderClientProvider>(context, listen: false);
+    // Obtener la instancia de OrderClientProvider sin escuchar cambios
+    final orderClientProvider =
+        Provider.of<OrderClientProvider>(context, listen: false);
+    final respuesta = orderClientProvider.productosCarrito;
+    //print(respuesta);
+    if (respuesta != null) {
+      setState(() {
+        productosCarrito = respuesta as List;
+      });
+    } else {
+      mostrarMensajeError(context, "Error al consultar los elementos");
+    }
 
-    final respuesta = await ProductsService.listarProductos();
-    //final respuesta = context.watch<OrderClientProvider>().productosCarrito;
+    print(productosCarrito);
+    setState(() {
+      datosCargados = true;
+    });
+  }
+
+  /*Future<void> fnListarProductos() async {
+
+    //final respuesta = await ProductsService.listarProductos();
+    final respuesta = context.watch<OrderClientProvider>().productosCarrito;
     //print(respuesta);
     if (respuesta != null) {
       setState(() {
@@ -105,13 +145,14 @@ class _ProductsTabState extends State<ProductsTab> {
     });
   }
 
+   */
+
   Future<void> fnNavegarPaginaAgregarProducto() async {
     await Navigator.pushNamed(context, "products/seleccionar");
     //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProductDetailScreen()));
     setState(() {
       datosCargados = true;
     });
-    fnListarProductos();
+    //fnListarProductos();
   }
-
 }
