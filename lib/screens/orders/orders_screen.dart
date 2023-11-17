@@ -141,6 +141,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       context,
       listen: false,
     );
+    orderClientProvider.changeTotalCarrito(newTotalCarrito: 0.0);
     orderClientProvider.changeClient(newIdCliente: 0, newNombreCliente: "");
     await Navigator.pushNamed(context, "orders/nuevo");
     //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const OrderDetailScreen()));

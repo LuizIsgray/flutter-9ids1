@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter9ids1/models/product_model.dart';
 import 'package:flutter9ids1/providers/order_client_provider.dart';
 import 'package:flutter9ids1/screens/products/product_detail_screen.dart';
+import 'package:flutter9ids1/services/order_details_service.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
 
 class ProductsSelectionScreen extends StatefulWidget {
-  const ProductsSelectionScreen({super.key});
+  final bool? esEdicionCarrito;
+  final int? idPedidoCarrito;
+  const ProductsSelectionScreen({super.key, this.esEdicionCarrito, this.idPedidoCarrito});
 
   @override
   State<ProductsSelectionScreen> createState() =>
@@ -19,6 +22,9 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
   bool datosCargados = false;
   List productos = [];
 
+  bool? esEdicion = false;
+  int? idPedido = 0;
+
   int cantidad = 0;
   double total = 0;
 
@@ -26,6 +32,16 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    esEdicion = widget.esEdicionCarrito;
+    if(esEdicion != null && esEdicion == true){
+      idPedido = widget.idPedidoCarrito;
+      print("idPedido ProductsSelection: $idPedido");
+      print("ES edicion");
+      //fnActualizarCarritoExistente();
+    }else{
+      //fnActualizarNuevoCarrito();
+      print("no es edicion");
+    }
     fnListarProductos();
   }
 
@@ -131,19 +147,13 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
                                         ),
                                         onPressed: () {
                                           Navigator.pop(context);
+                                          if(esEdicion != null && esEdicion == true){
+                                            fnActualizarProductoCarrito(producto, cantidad, total);
+                                          }else{
+                                            fnAgregarProductoCarrito(producto, cantidad, total);
+                                          }
 
-                                          /*final Producto nuevoProducto = Producto(
-                                            id: producto["id"],
-                                            codigo: producto["codigo"],
-                                            descripcion: producto["descripcion"],
-                                            precio: double.parse(producto["precio"]),
-                                            created_at: producto["created_at"],
-                                            updated_at: producto["updated_at"],
-                                          );*/
 
-                                          //context.read<OrderClientProvider>().addToCart(nuevosProductos: [nuevoProducto]);
-
-                                          fnAgregarProductoCarrito(producto, cantidad, total);
                                         },
                                       ),
                                     ],
@@ -195,15 +205,56 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
       // Assuming Producto is your model class for products
       final nuevoProducto = Producto(id: id, cantidad: cantidad, total: total);
 
-      print(nuevoProducto);
+      //print(nuevoProducto);
 
       // Pass the created product instance to addToCart
       context.read<OrderClientProvider>().addToCart(nuevoProducto: nuevoProducto);
 
+      mostrarMensajeExito(context, "Agregado con éxito");
+      Navigator.pop(context);
+
+    }else{
+      mostrarMensajeError(context, "Error al agregar el elemento");
     }
 
   }
 
+  Future<void> fnActualizarProductoCarrito(Map<dynamic, dynamic> producto, int nuevaCantidad, double nuevoTotal) async {
+    print("fnActualizarProductoCarrito");
+
+      final pedido_id = idPedido;
+      final producto_id = producto["id"];
+      final cantidad = nuevaCantidad;
+      final total = nuevoTotal;
+      print(cantidad);
+      print(total);
+
+      final body = {
+        "pedido_id": pedido_id,
+        "producto_id": producto_id,
+        "cantidad": cantidad,
+        "total": total,
+      };
+      //Enviar información al servidor
+      final isSuccess = await OrderDetailsService.agregarDetallePedido(body);
+      //Mostrar respuesta segun el estado devuelto
+      if (isSuccess) {
+        print("Detalle de Producto Agregado: $pedido_id");
+
+        //orderClientProvider.clearData();
+
+
+        mostrarMensajeExito(context, "Agregado con éxito");
+
+        Navigator.pop(context);
+      } else {
+        print("Detalle de Producto ERROR no agregado: $pedido_id");
+        mostrarMensajeError(context, "Error al agregar el elemento");
+      }
+
+  }
+
+/*
   Future<void> fnEliminarProducto(int id) async {
     //Borrar elemento usando servicio
     final isSuccess = await ProductsService.borrarProducto(id);
@@ -219,6 +270,7 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
       mostrarMensajeError(context, "Error al eliminar el elemento");
     }
   }
+*/
 
   Future<void> fnListarProductos() async {
     final respuesta = await ProductsService.listarProductos();

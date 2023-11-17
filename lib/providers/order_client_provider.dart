@@ -57,11 +57,38 @@ class OrderClientProvider extends ChangeNotifier {
     productosCarrito.add(productoMap);
 
     //print("añadido");
-    print(productosCarrito);
+    //print(productosCarrito);
     print("Carrito: $productosCarrito");
 
     totalCarrito += total;
     print("Total carrito: $totalCarrito");
+    notifyListeners();
+  }
+
+  void removeFromCart({required int productId}) {
+    print("removeFromCart");
+    // Encuentra el índice del producto en el carrito
+    int index = productosCarrito.indexWhere((producto) => producto['id'] == productId);
+
+    if (index != -1) {
+      // Resta el total del producto eliminado del total del carrito
+      totalCarrito -= productosCarrito[index]['total'];
+
+      // Elimina el producto del carrito
+      productosCarrito.removeAt(index);
+
+      print("Producto eliminado del carrito");
+      print("Carrito: $productosCarrito");
+      print("Total carrito: $totalCarrito");
+
+      notifyListeners();
+    } else {
+      print("Producto no encontrado en el carrito");
+    }
+  }
+
+  void changeTotalCarrito({required double newTotalCarrito}) async {
+    totalCarrito = newTotalCarrito;
     notifyListeners();
   }
 

@@ -34,6 +34,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     if (todo != null) {
       esEdicion = true;
       clienteId = 0;
+      //print(todo);
+      pedidoId = todo["id"];
+      print("pedidoId: $pedidoId");
     }
   }
 
@@ -56,10 +59,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ]),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            ClientTab(),
-            ProductsTab(),
+            const ClientTab(),
+            ProductsTab(esEdicionCarrito: esEdicion, idPedidoCarrito: pedidoId),
           ],
         ),
         bottomNavigationBar: BottomAppBar(
@@ -142,8 +145,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           fontSize: 20,
                         ),
                       ),
-                      const Text(
-                        "Total a pagar: 5555",
+                      Text("Total Carrito: ${context.watch<OrderClientProvider>().totalCarrito.toString()}",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ],
@@ -166,7 +168,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final orderClientProvider =
         Provider.of<OrderClientProvider>(context, listen: false);
     //Obtener datos del formulario
-    final numero_pedido = "AAAXXX";
+    final numero_pedido = orderClientProvider.idPedido+1; //Toma el valor del id del ultimo pedido + 1
     final fecha_hora = DateTime.now().toLocal().toString();
     final cliente_id = orderClientProvider.idCliente;
     if (cliente_id != null || cliente_id >= 1) {

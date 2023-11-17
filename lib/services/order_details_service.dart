@@ -8,13 +8,15 @@ class OrderDetailsService {
   //Variable para la dirección IP, para usar en todos los request
   final urlServer = Environment.urlServer;
 
-  static Future<List?> listarPedidos() async {
+  static Future<List?> listarDetallesPedido(int? idPedido) async {
     //List? vuelve la lista nullable, puede devolver null
 
     //Se crea una variable instanciando la clase principal y obteniendo ip
-    final url = "${OrderDetailsService().urlServer}/api/detalles-pedido";
+    final url = "${OrderDetailsService().urlServer}/api/detalles-pedido/pedido/${idPedido}";
     final uri = Uri.parse(url);
     final response = await http.get(uri);
+    //print(response.body);
+    //print(response.statusCode);
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
@@ -48,7 +50,7 @@ class OrderDetailsService {
     return response.statusCode == 200;
   }
 
-  static Future<bool> borrarPedido(int id) async {
+  static Future<bool> borrarDetallePedido(int id) async {
     //Se crea una variable instanciando la clase principal y obteniendo ip
     //Borrar elemento
     final url = "${OrderDetailsService().urlServer}/api/detalles-pedido/$id";

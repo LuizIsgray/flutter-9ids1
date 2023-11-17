@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter9ids1/providers/order_client_provider.dart';
+import 'package:flutter9ids1/screens/products/products_selection_screen.dart';
 import 'package:flutter9ids1/services/order_details_service.dart';
 import 'package:flutter9ids1/services/products_service.dart';
 import 'package:flutter9ids1/utils/snackbar_util.dart';
@@ -7,7 +8,9 @@ import 'package:flutter9ids1/widgets/floating_actionbutton_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProductsTab extends StatefulWidget {
-  const ProductsTab({super.key});
+  final bool? esEdicionCarrito;
+  final int? idPedidoCarrito;
+  const ProductsTab({super.key, this.esEdicionCarrito, this.idPedidoCarrito});
 
   @override
   State<ProductsTab> createState() => _ProductsTabState();
@@ -17,11 +20,25 @@ class _ProductsTabState extends State<ProductsTab> {
   bool datosCargados = false;
   List productosCarrito = [];
 
+  bool? esEdicion = false;
+  int? idPedido = 0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fnActualizarCarrito();
+    esEdicion = widget.esEdicionCarrito;
+    if(esEdicion != null && esEdicion == true){
+      idPedido = widget.idPedidoCarrito;
+      print("idPedido ProductsTab: $idPedido");
+      print("ES edicion");
+      fnActualizarCarritoExistente();
+    }else{
+      esEdicion = false;
+      fnActualizarNuevoCarrito();
+      //print("no es edicion");
+    }
+
   }
 
   @override
@@ -43,7 +60,13 @@ class _ProductsTabState extends State<ProductsTab> {
                   icon: Icon(Icons.refresh),
                   onPressed: () {
                     print('Botón presionado');
-                    fnActualizarCarrito();
+                    if(esEdicion != null && esEdicion == true){
+                      print("Boton Carrito Existe");
+                      fnActualizarCarritoExistente();
+                    }else{
+                      fnActualizarNuevoCarrito();
+                      //print("Boton Nuevo Carrito");
+                    }
                     //fnAgregarPedido();
                   },
                 ),
@@ -74,12 +97,12 @@ class _ProductsTabState extends State<ProductsTab> {
                 padding: const EdgeInsets.all(12),
                 itemBuilder: (context, index) {
                   final producto = productosCarrito[index] as Map;
-                  print(producto);
+                  //print(producto);
                   final id = producto["id"] as int;
-                  print("el final: $id");
-                  print(producto["id"]);
+                  print("ID Producto: $id");
+                  //print(producto["id"]);
 
-                  print(productosCarrito);
+                  //print(productosCarrito);
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
@@ -97,6 +120,16 @@ class _ProductsTabState extends State<ProductsTab> {
                           Text(producto["total"].toString()),
                         ],
                       ),
+                      trailing: IconButton(icon: const Icon(Icons.delete), onPressed: () {
+                        if(esEdicion != null && esEdicion == true){
+                          print("Boton Borrar Existente");
+                          fnEliminarDetallePedido(id);
+                        }else{
+                          context.read<OrderClientProvider>().removeFromCart(productId: producto["id"]);
+                          fnActualizarNuevoCarrito();
+                        }
+
+                      },),
                     ),
                   );
                 },
@@ -108,7 +141,7 @@ class _ProductsTabState extends State<ProductsTab> {
     );
   }
 
-  Future<void> fnActualizarCarrito() async {
+  Future<void> fnActualizarNuevoCarrito() async {
     //final respuesta = await ProductsService.listarProductos();
     //Provider.of<OrderClientProvider>(context, listen: false);
     // Obtener la instancia de OrderClientProvider sin escuchar cambios
@@ -130,8 +163,55 @@ class _ProductsTabState extends State<ProductsTab> {
     });
   }
 
+  Future<void> fnActualizarCarritoExistente() async {
+    print("fnActualizarCarritoExistente");
+    final id = idPedido;
+    final respuesta = await OrderDetailsService.listarDetallesPedido(id);
+    //Provider.of<OrderClientProvider>(context, listen: false);
+    // Obtener la instancia de OrderClientProvider sin escuchar cambios
+
+    final orderClientProvider =
+    Provider.of<OrderClientProvider>(context, listen: false);
+    //final respuesta = orderClientProvider.productosCarrito;
+    //print(respuesta);
+    if (respuesta != null) {
+      setState(() {
+        productosCarrito = respuesta as List;
+      });
+      double totalCarrito = 0;
+      for(var producto in productosCarrito){
+        //print(producto);
+        //print(producto["total"]);
+        totalCarrito = totalCarrito + double.parse(producto["total"]);
+        print(totalCarrito);
+      }
+      orderClientProvider.changeTotalCarrito(newTotalCarrito: totalCarrito);
+    } else {
+      mostrarMensajeError(context, "Error al consultar los elementos");
+    }
+
+    //print("fnActualizar: $productosCarrito");
+    setState(() {
+      datosCargados = true;
+    });
+
+  }
+
+  Future<void> fnEliminarDetallePedido(int id) async {
+    //Borrar elemento usando servicio
+    final isSuccess = await OrderDetailsService.borrarDetallePedido(id);
+    if (isSuccess) {
+      //Remover elemento de la lista
+      fnActualizarCarritoExistente();
+      mostrarMensajeExito(context, "Elemento eliminado del carrito");
+    } else {
+      mostrarMensajeError(context, "Error al eliminar el elemento");
+    }
+  }
+
+  /*
   Future<void> fnAgregarDetallesPedido() async {
-    print("fnAgregarPedido: $productosCarrito");
+   print("fnAgregarPedido: $productosCarrito");
     for (var producto in productosCarrito) {
       print("fnAgregarPedidoFOR: ${productosCarrito[0]["id"]}");
       //Obtener datos del formulario
@@ -192,6 +272,7 @@ class _ProductsTabState extends State<ProductsTab> {
     }
      */
   }
+  */
 
   /*Future<void> fnListarProductos() async {
 
@@ -214,11 +295,11 @@ class _ProductsTabState extends State<ProductsTab> {
    */
 
   Future<void> fnNavegarPaginaAgregarProducto() async {
-    await Navigator.pushNamed(context, "products/seleccionar");
-    //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProductDetailScreen()));
+    //await Navigator.pushNamed(context, "products/seleccionar");
+    await Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductsSelectionScreen(esEdicionCarrito: esEdicion, idPedidoCarrito: idPedido)));
     setState(() {
       datosCargados = true;
     });
-    //fnListarProductos();
+    //fnActualizarCarritoExistente();
   }
 }
