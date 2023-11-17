@@ -77,10 +77,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     if (context.watch<OrderClientProvider>().idCliente != 0)
                       Text(
                         //"Opción seleccionada: $cliente_id",
-                        context
-                            .watch<OrderClientProvider>()
-                            .idCliente
-                            .toString(),
+                        context.watch<OrderClientProvider>().idCliente.toString(),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -96,16 +93,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ElevatedButton(
                 onPressed: () async {
                   //esEdicion ? fnActualizarPedido() : fnAgregarPedido();
+                  final todo = widget.todo;
+                  final orderClientProvider = Provider.of<OrderClientProvider>(
+                    context,
+                    listen: false,
+                  );
                   if (esEdicion) {
-                    final todo = widget.todo;
-                    final orderClientProvider = Provider.of<OrderClientProvider>(
-                      context,
-                      listen: false,
-                    );
-                    orderClientProvider.changeClient(newIdCliente: todo?["id"], newNombreCliente: todo?["cliente"]["nombre"]);
+                    //orderClientProvider.changeClient(newIdCliente: todo?["cliente_id"], newNombreCliente: todo?["cliente"]["nombre"]);
                     fnActualizarPedido();
                   } else {
                     if (!pedidoAgregado) {
+                      //orderClientProvider.changeClient(newIdCliente: 0, newNombreCliente: "");
                       print("Pedido Agregado FALSE");
                       await fnAgregarPedido();
 
@@ -229,11 +227,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       listen: false,
     );
     print("Cliente Id preactu: $clienteId");
-    clienteId = orderClientProvider.idCliente;
-    print("Cliente Id postactu: $clienteId");
+
 
     //Obtener datos del formulario
     final todo = widget.todo;
+    clienteId = orderClientProvider.idCliente;
+    print("Cliente Id postactu: $clienteId");
 
     if (todo == null) {
       mostrarMensajeError(context, "No puedes realizar está acción");

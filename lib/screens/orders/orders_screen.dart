@@ -137,6 +137,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Future<void> fnNavegarPaginaNuevoPedido() async {
+    final orderClientProvider = Provider.of<OrderClientProvider>(
+      context,
+      listen: false,
+    );
+    orderClientProvider.changeClient(newIdCliente: 0, newNombreCliente: "");
     await Navigator.pushNamed(context, "orders/nuevo");
     //await Navigator.push(context, MaterialPageRoute(builder: (context)=> const OrderDetailScreen()));
     setState(() {
@@ -148,6 +153,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Future<void> fnNavegarPaginaEditarPedido(Map pedido) async {
+    final orderClientProvider = Provider.of<OrderClientProvider>(
+      context,
+      listen: false,
+    );
+    orderClientProvider.changeClient(newIdCliente: pedido["cliente_id"], newNombreCliente: pedido["cliente"]["nombre"]);
     final route = MaterialPageRoute(
         builder: (context) => OrderDetailScreen(
             todo: pedido)); //Se manda el pedido seleccionado a la pagina
