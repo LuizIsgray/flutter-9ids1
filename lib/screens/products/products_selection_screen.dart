@@ -190,14 +190,17 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
     print("producto id: $id");
     print("cantidad: $cantidad");
     print ("total: $total");
+    if(cantidad > 0){
 
-    // Assuming Producto is your model class for products
-    final nuevoProducto = Producto(id: id, cantidad: cantidad, total: total);
+      // Assuming Producto is your model class for products
+      final nuevoProducto = Producto(id: id, cantidad: cantidad, total: total);
 
-    print(nuevoProducto);
+      print(nuevoProducto);
 
-    // Pass the created product instance to addToCart
-    context.read<OrderClientProvider>().addToCart(nuevoProducto: nuevoProducto);
+      // Pass the created product instance to addToCart
+      context.read<OrderClientProvider>().addToCart(nuevoProducto: nuevoProducto);
+
+    }
 
   }
 

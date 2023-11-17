@@ -21,9 +21,10 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   bool esEdicion = false;
+  bool pedidoAgregado = false;
 
   int pedidoId = 0; // Variable para almacenar la opción seleccionada
-
+  int clienteId = 0;
   List productosCarrito = [];
 
   @override
@@ -32,6 +33,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final todo = widget.todo;
     if (todo != null) {
       esEdicion = true;
+      clienteId = 0;
     }
   }
 
@@ -92,12 +94,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   //esEdicion ? fnActualizarPedido() : fnAgregarPedido();
                   if (esEdicion) {
+                    final todo = widget.todo;
+                    final orderClientProvider = Provider.of<OrderClientProvider>(
+                      context,
+                      listen: false,
+                    );
+                    orderClientProvider.changeClient(newIdCliente: todo?["id"], newNombreCliente: todo?["cliente"]["nombre"]);
                     fnActualizarPedido();
                   } else {
-                    fnAgregarPedido();
+                    if (!pedidoAgregado) {
+                      print("Pedido Agregado FALSE");
+                      await fnAgregarPedido();
+
+                      if (pedidoAgregado) {
+                        print("if TRUE");
+                        await fnAgregarDetallesPedido();
+                      }
+                    } else {
+                      print("Pedido Agregado TRUE");
+                    }
+
                     //fnAgregarDetallesPedido();
                   }
                   //esEdicion ? fnActualizarPedido() : fnAgregarPedido();
@@ -107,7 +126,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         newIdCliente: 0,
                         newNombreCliente: "",
                       );
-
 
                   //context.read<OrderClientProvider>().clearData();
                 },
@@ -142,7 +160,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Future<void> fnAgregarPedido() async {
+    //try {
     print("fnAgregarPedido Order_Detail");
+    pedidoAgregado = false;
+    print("Estado Pedido: $pedidoAgregado");
 
     final orderClientProvider =
         Provider.of<OrderClientProvider>(context, listen: false);
@@ -150,52 +171,80 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final numero_pedido = "AAAXXX";
     final fecha_hora = DateTime.now().toLocal().toString();
     final cliente_id = orderClientProvider.idCliente;
-    final body = {
-      "numero_pedido": numero_pedido,
-      "fecha_hora": fecha_hora,
-      "cliente_id": cliente_id,
-    };
-    //Enviar información al servidor
-    final response = await OrdersService.agregarPedido(body);
-    print(response.body);
-    Map<String, dynamic> jsonResp = jsonDecode(response.body);
-    print(pedidoId);
-    //Mostrar respuesta segun el estado devuelto
-    if (response.statusCode == 200) {
-      pedidoId = jsonResp["id"];
-      fnAgregarDetallesPedido();
-      /*
+    if (cliente_id != null || cliente_id >= 1) {
+      final body = {
+        "numero_pedido": numero_pedido,
+        "fecha_hora": fecha_hora,
+        "cliente_id": cliente_id,
+      };
+      //Enviar información al servidor
+      final response = await OrdersService.agregarPedido(body);
+      print(response.body);
+      Map<String, dynamic> jsonResp = jsonDecode(response.body);
+      print("pedidoId antes del IF: $pedidoId");
+      print(response.statusCode);
+
+      //Mostrar respuesta segun el estado devuelto
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        pedidoId = jsonResp["id"];
+        print("pedidoId dentro IF: $pedidoId");
+        orderClientProvider.changeOrderId(newIdPedido: pedidoId);
+        //context.read<OrderClientProvider>().changeOrderId(newIdPedido: pedidoId);
+        //fnAgregarDetallesPedido();
+        pedidoAgregado = true;
+        print("Estado Pedido: $pedidoAgregado");
+        /*
       context.read<OrderClientProvider>().changeClient(
             newIdCliente: 0,
             newNombreCliente: "",
           );
 
        */
-      //print(response.body);
+        //print(response.body);
 
+        //mostrarMensajeExito(context, "Agregado con éxito");
 
-      //mostrarMensajeExito(context, "Agregado con éxito");
-
-      Navigator.pop(context);
-    } else {
-      //mostrarMensajeError(context, "Error al agregar el elemento");
+        //Navigator.pop(context);
+      } else {
+        pedidoAgregado = false;
+        //mostrarMensajeError(context, "Error al agregar el elemento");
+      }
     }
+
+    /*
+    }catch (e) {
+      // Handle any exceptions, you can log or handle them appropriately
+      print("Error: $e");
+    }
+
+       */
 
     //print(response.statusCode);
     //print(response.body);
   }
 
   Future<void> fnActualizarPedido() async {
+    final orderClientProvider = Provider.of<OrderClientProvider>(
+      context,
+      listen: false,
+    );
+    print("Cliente Id preactu: $clienteId");
+    clienteId = orderClientProvider.idCliente;
+    print("Cliente Id postactu: $clienteId");
+
     //Obtener datos del formulario
     final todo = widget.todo;
+
     if (todo == null) {
       mostrarMensajeError(context, "No puedes realizar está acción");
       return;
     }
     final id = todo["id"];
+    print("TODO id: $id");
     final numero_pedido = todo["numero_pedido"];
     final fecha_hora = todo["fecha_hora"];
-    final cliente_id = todo["cliente_id"];
+    //final cliente_id = todo["cliente_id"];
+    final cliente_id = clienteId;
     final body = {
       "numero_pedido": numero_pedido,
       "fecha_hora": fecha_hora,
@@ -207,17 +256,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     //Mostrar respuesta segun el estado devuelto
     if (isSuccess) {
-      mostrarMensajeExito(context, "Actualizado con éxito");
-      Navigator.pop(context);
+      //mostrarMensajeExito(context, "Actualizado con éxito");
+      //Navigator.pop(context);
     } else {
-      mostrarMensajeError(context, "Error al actualizar el elemento");
+      //mostrarMensajeError(context, "Error al actualizar el elemento");
     }
   }
 
   Future<void> fnAgregarDetallesPedido() async {
-    print("fnAgregarDEtalle");
+    print("fnAgregarDetallesPedido");
     final orderClientProvider =
         Provider.of<OrderClientProvider>(context, listen: false);
+    final newPedidoId = orderClientProvider.idPedido;
+    print("newPedidoId: $newPedidoId");
     final respuesta = orderClientProvider.productosCarrito;
     //print(respuesta);
     if (respuesta != null) {
@@ -227,11 +278,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     } else {
       mostrarMensajeError(context, "Error al consultar los elementos");
     }
-    print("fnAgregarPedido: $productosCarrito");
+    print("fnAgregarPedido MOSTRAR CARRITO: $productosCarrito");
     for (var producto in productosCarrito) {
       print("fnAgregarPedidoFOR: ${productosCarrito[0]["id"]}");
       //Obtener datos del formulario
-      final pedido_id = pedidoId;
+      //print("newPedidoId: $newPedidoId");
+      final pedido_id = newPedidoId;
       final producto_id = producto["id"];
       final cantidad = producto["cantidad"];
       final total = producto["total"];
@@ -244,22 +296,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       };
       //Enviar información al servidor
       final isSuccess = await OrderDetailsService.agregarDetallePedido(body);
-
       //Mostrar respuesta segun el estado devuelto
       if (isSuccess) {
-        /*
-        txtCodigoController.text = "";
-        txtDescripcionController.text = "";
-        txtPrecioController.text = "";
-        */
-        context.read<OrderClientProvider>().clearData();
+        print("Detalle de Producto Agregado: $pedido_id");
 
-        mostrarMensajeExito(context, "Agregado con éxito");
+        //orderClientProvider.clearData();
 
-        Navigator.pop(context);
+        //mostrarMensajeExito(context, "Agregado con éxito");
+
+        //Navigator.pop(context);
       } else {
-        mostrarMensajeError(context, "Error al agregar el elemento");
+        print("Detalle de Producto ERROR no agregado: $pedido_id");
+        //mostrarMensajeError(context, "Error al agregar el elemento");
       }
     }
+    orderClientProvider.clearData();
   }
 }

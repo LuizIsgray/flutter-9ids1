@@ -31,7 +31,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Scaffold(
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: const Text("Pedidos"),
+        title: Text("Pedidos: ${context.watch<OrderClientProvider>().idPedido.toString()}"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton:

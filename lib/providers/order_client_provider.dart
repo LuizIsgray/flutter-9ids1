@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter9ids1/models/product_model.dart';
 
 class OrderClientProvider extends ChangeNotifier {
-  int idCliente, idProducto, cantidad;
+  int idCliente, idProducto, idPedido, cantidad;
   double total, totalCarrito;
   String nombreCliente;
 
@@ -15,6 +15,7 @@ class OrderClientProvider extends ChangeNotifier {
     this.cantidad = 0,
     this.total = 0.0,
     this.totalCarrito = 0.0,
+    this.idPedido = 0,
     List<Map<String, dynamic>>? productosCarrito,
   }) : this.productosCarrito = productosCarrito ?? [];
 
@@ -24,30 +25,43 @@ class OrderClientProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeClientId({required int newIdCliente}) async {
+    idCliente = newIdCliente;
+    notifyListeners();
+  }
+
+  void changeOrderId({required int newIdPedido}) async {
+    idPedido = newIdPedido;
+    notifyListeners();
+  }
+
   void addToCart({required Producto nuevoProducto}) {
     idProducto = nuevoProducto.id.toInt();
     cantidad = nuevoProducto.cantidad.toInt();
     total = nuevoProducto.total.toDouble();
 
+    /*
     print(idProducto);
     print(cantidad);
     print(total);
+
+     */
 
     Map<String, dynamic> productoMap = {
       'id': idProducto,
       'cantidad': cantidad,
       'total': total,
     };
-    print("producto map: $productoMap");
+    //print("producto map: $productoMap");
 
     productosCarrito.add(productoMap);
 
-    print("añadido");
+    //print("añadido");
     print(productosCarrito);
     print("Carrito: $productosCarrito");
 
     totalCarrito += total;
-    print("total carrito: $totalCarrito");
+    print("Total carrito: $totalCarrito");
     notifyListeners();
   }
 
