@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              ElevatedButton.icon(
+              /*ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, "home");
                 },
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(192, 8, 18, 1),
                 ),
-              ),
+              ),*/
 
             ],
           ),

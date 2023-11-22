@@ -31,7 +31,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Scaffold(
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: Text("Pedidos: ${context.watch<OrderClientProvider>().idPedido.toString()}"),
+        //title: Text("Pedidos: ${context.watch<OrderClientProvider>().idPedido.toString()}"),
+        title: const Text("Pedidos"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton:
@@ -77,18 +78,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           pedido["id"].toString(),
                           style: const TextStyle(color: Colors.black),
                         )),
-                    title: Text(pedido["numero_pedido"]),
+                    title: Text("Cliente: $clienteNombre"),
                     subtitle: Column(
                       children: [
                         Row(children: [
-                          Text("Cliente: $clienteNombre"),
+                          Text(pedido["fecha_hora"].toString()),
                           const SizedBox(width: 20),
                         ]),
-                        Row(
+                        /*Row(
                           children: [
                             Text(pedido["fecha_hora"].toString()),
                           ],
-                        ),
+                        ),*/
                       ],
                     ),
                     trailing: PopupMenuButton(
@@ -190,6 +191,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     if (respuesta != null) {
       setState(() {
         pedidos = respuesta;
+        print(pedidos);
       });
     } else {
       mostrarMensajeError(context, "Error al consultar los elementos");

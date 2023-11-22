@@ -286,12 +286,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       //print("newPedidoId: $newPedidoId");
       final pedido_id = newPedidoId;
       final producto_id = producto["id"];
+      final descripcion = producto["descripcion"];
       final cantidad = producto["cantidad"];
       final total = producto["total"];
 
       final body = {
         "pedido_id": pedido_id,
         "producto_id": producto_id,
+        "descripcion": descripcion,
         "cantidad": cantidad,
         "total": total,
       };

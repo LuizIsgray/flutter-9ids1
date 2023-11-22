@@ -197,13 +197,15 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
 
   Future<void> fnAgregarProductoCarrito(Map<dynamic, dynamic> producto, int cantidad, double total) async {
     final id = producto["id"];
+    final descripcion = producto["descripcion"];
     print("producto id: $id");
+    print("producto: $descripcion");
     print("cantidad: $cantidad");
     print ("total: $total");
     if(cantidad > 0){
 
       // Assuming Producto is your model class for products
-      final nuevoProducto = Producto(id: id, cantidad: cantidad, total: total);
+      final nuevoProducto = Producto(id: id, descripcion: descripcion,cantidad: cantidad, total: total);
 
       //print(nuevoProducto);
 
@@ -224,6 +226,7 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
 
       final pedido_id = idPedido;
       final producto_id = producto["id"];
+      final descripcion = producto["descripcion"];
       final cantidad = nuevaCantidad;
       final total = nuevoTotal;
       print(cantidad);
@@ -232,6 +235,7 @@ class _ProductsSelectionScreenState extends State<ProductsSelectionScreen> {
       final body = {
         "pedido_id": pedido_id,
         "producto_id": producto_id,
+        "descripcion": descripcion,
         "cantidad": cantidad,
         "total": total,
       };

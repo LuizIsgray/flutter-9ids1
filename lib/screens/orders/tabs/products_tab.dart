@@ -100,6 +100,7 @@ class _ProductsTabState extends State<ProductsTab> {
                   //print(producto);
                   final id = producto["id"] as int;
                   print("ID Producto: $id");
+                  print("Producto: $producto");
                   //print(producto["id"]);
 
                   //print(productosCarrito);
@@ -108,11 +109,11 @@ class _ProductsTabState extends State<ProductsTab> {
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Text(
-                          "${producto["id"]}",
+                          "${index + 1}",
                           style: const TextStyle(color: Colors.black),
                         ),
                       ),
-                      title: Text(producto["id"].toString()),
+                      title: Text(producto["descripcion"].toString()),
                       subtitle: Row(
                         children: [
                           Text(producto["cantidad"].toString()),
